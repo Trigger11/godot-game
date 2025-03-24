@@ -1,21 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://drct48uupixqm"]
+[gd_scene load_steps=3 format=3 uid="uid://dlj8j0bh7dws4"]
 
-[ext_resource type="Script" path="res://UI/Options.cs" id="1_j7a1s"]
-[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_1rwk3"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g42gu"]
-bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.815686, 0.65098, 0.407843, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0, 0, 0, 0.317647)
-shadow_size = 5
+[ext_resource type="Script" path="res://Scripts/OptionsManager.cs" id="1_m0hn6"]
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_0hmwc"]
 
 [node name="Options" type="Control"]
 layout_mode = 3
@@ -24,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_j7a1s")
+script = ExtResource("1_m0hn6")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -35,61 +21,21 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0705882, 0.0784314, 0.109804, 1)
 
-[node name="BackgroundTexture" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="TitlePanel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 60.0
-offset_right = 300.0
-offset_bottom = 180.0
-grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_g42gu")
-
-[node name="TitleLabel" type="Label" parent="TitlePanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.870588, 0.729412, 0.482353, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.603922)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("2_1rwk3")
-theme_override_font_sizes/font_size = 48
-text = "选项设置"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SettingsPanel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -150.0
-offset_right = 300.0
+offset_left = -250.0
+offset_top = -200.0
+offset_right = 250.0
 offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_g42gu")
 
-[node name="SettingsContainer" type="VBoxContainer" parent="SettingsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,103 +48,122 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="MusicVolumeContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer"]
+[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 32
+text = "游戏设置"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="SettingsPanel/SettingsContainer/MusicVolumeContainer"]
+[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AudioSettingsLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 24
+text = "音频设置"
+horizontal_alignment = 1
+
+[node name="MusicVolumeContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MusicVolumeLabel" type="Label" parent="Panel/VBoxContainer/MusicVolumeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.5
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_fonts/font = ExtResource("2_1rwk3")
-theme_override_font_sizes/font_size = 24
-text = "音乐音量"
-vertical_alignment = 1
+size_flags_stretch_ratio = 0.3
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "音乐音量:"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="SettingsPanel/SettingsContainer/MusicVolumeContainer"]
-unique_name_in_owner = true
+[node name="MusicVolumeSlider" type="HSlider" parent="Panel/VBoxContainer/MusicVolumeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 max_value = 100.0
+step = 5.0
 value = 80.0
 
-[node name="SFXVolumeContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="SettingsPanel/SettingsContainer/SFXVolumeContainer"]
+[node name="MusicVolumeValue" type="Label" parent="Panel/VBoxContainer/MusicVolumeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.5
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_fonts/font = ExtResource("2_1rwk3")
-theme_override_font_sizes/font_size = 24
-text = "音效音量"
-vertical_alignment = 1
+size_flags_stretch_ratio = 0.2
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "80%"
+horizontal_alignment = 2
 
-[node name="SFXVolumeSlider" type="HSlider" parent="SettingsPanel/SettingsContainer/SFXVolumeContainer"]
-unique_name_in_owner = true
+[node name="SFXVolumeContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SFXVolumeLabel" type="Label" parent="Panel/VBoxContainer/SFXVolumeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "音效音量:"
+
+[node name="SFXVolumeSlider" type="HSlider" parent="Panel/VBoxContainer/SFXVolumeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 max_value = 100.0
-value = 80.0
+step = 5.0
+value = 100.0
 
-[node name="HSeparator" type="HSeparator" parent="SettingsPanel/SettingsContainer"]
-layout_mode = 2
-
-[node name="FullscreenContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="SettingsPanel/SettingsContainer/FullscreenContainer"]
+[node name="SFXVolumeValue" type="Label" parent="Panel/VBoxContainer/SFXVolumeContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.5
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_fonts/font = ExtResource("2_1rwk3")
-theme_override_font_sizes/font_size = 24
-text = "全屏模式"
-vertical_alignment = 1
+size_flags_stretch_ratio = 0.2
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "100%"
+horizontal_alignment = 2
 
-[node name="FullscreenToggle" type="CheckButton" parent="SettingsPanel/SettingsContainer/FullscreenContainer"]
-unique_name_in_owner = true
+[node name="MusicEnabledContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MusicEnabledLabel" type="Label" parent="Panel/VBoxContainer/MusicEnabledContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "启用背景音乐:"
 
-[node name="HSeparator2" type="HSeparator" parent="SettingsPanel/SettingsContainer"]
+[node name="MusicEnabledCheckbox" type="CheckBox" parent="Panel/VBoxContainer/MusicEnabledContainer"]
+layout_mode = 2
+button_pressed = true
+
+[node name="SFXEnabledContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="SpacerControl" type="Control" parent="SettingsPanel/SettingsContainer"]
+[node name="SFXEnabledLabel" type="Label" parent="Panel/VBoxContainer/SFXEnabledContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
+theme_override_font_sizes/font_size = 18
+text = "启用音效:"
 
-[node name="BackButton" type="Button" parent="SettingsPanel/SettingsContainer"]
-unique_name_in_owner = true
+[node name="SFXEnabledCheckbox" type="CheckBox" parent="Panel/VBoxContainer/SFXEnabledContainer"]
 layout_mode = 2
-size_flags_vertical = 8
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("2_1rwk3")
+button_pressed = true
+
+[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
+theme_override_fonts/font = ExtResource("2_0hmwc")
 theme_override_font_sizes/font_size = 24
-text = "返回主菜单"
-
-[node name="VersionLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -26.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.501961, 0.501961, 0.501961, 1)
-text = "v0.1.0"
-horizontal_alignment = 2 
+text = "返回" 

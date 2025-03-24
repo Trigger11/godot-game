@@ -14,17 +14,33 @@ public partial class GameManager : Node
             // 如果实例为空，尝试从场景树获取
             if (_instance == null)
             {
-                // 注意：这种方式只在GameManager已经作为AutoLoad添加后有效
-                _instance = Engine.GetSingleton("GameManager") as GameManager;
+                // 尝试从根节点获取
+                if (Engine.GetMainLoop() is SceneTree tree && tree.Root != null)
+                {
+                    _instance = tree.Root.GetNodeOrNull<GameManager>("GameManager");
+                }
                 
                 if (_instance == null)
                 {
-                    GD.PrintErr("GameManager单例未找到，请确保已在项目设置中添加为AutoLoad");
+                    GD.PrintErr("GameManager单例未找到，请确保场景中包含GameManager节点");
                 }
             }
             return _instance;
         }
     }
+    
+    // 音频播放器
+    private AudioStreamPlayer _musicPlayer;
+    private AudioStreamPlayer _sfxPlayer;
+    
+    // 音量设置
+    private float _musicVolume = 0.8f;
+    private float _sfxVolume = 1.0f;
+    private bool _musicEnabled = true;
+    private bool _sfxEnabled = true;
+    
+    // 当前播放的背景音乐
+    private string _currentMusic = "";
     
     // 游戏数据
     public PlayerData PlayerData { get; private set; }
@@ -72,18 +88,19 @@ public partial class GameManager : Node
         // 使GameManager在场景切换时不会被销毁
         ProcessMode = ProcessModeEnum.Always;
         
-        // 设置单例实例
-        if (_instance == null)
-        {
-            _instance = this;
-            GD.Print("GameManager单例已设置");
-        }
-        else if (_instance != this)
-        {
-            GD.PushWarning("GameManager单例已存在，销毁当前实例");
-            QueueFree();
-            return;
-        }
+        // 设置为持久节点
+        MakePersistent(this);
+        
+        // 初始化音频播放器
+        _musicPlayer = new AudioStreamPlayer();
+        _musicPlayer.VolumeDb = LinearToDb(_musicVolume);
+        _musicPlayer.Bus = "Music";
+        AddChild(_musicPlayer);
+        
+        _sfxPlayer = new AudioStreamPlayer();
+        _sfxPlayer.VolumeDb = LinearToDb(_sfxVolume);
+        _sfxPlayer.Bus = "SFX";
+        AddChild(_sfxPlayer);
         
         // 检查必要资源
         CheckResources();
@@ -98,6 +115,9 @@ public partial class GameManager : Node
         
         // 初始化物品列表
         InitItems();
+        
+        // 播放默认背景音乐
+        PlayBackgroundMusic("res://Resources/Audio/Music/main_theme.ogg");
         
         GD.Print("GameManager初始化完成");
     }
@@ -277,27 +297,43 @@ public partial class GameManager : Node
     {
         try
         {
+            // 播放UI点击音效
+            if (_sfxEnabled)
+            {
+                PlaySoundEffect("res://Resources/Audio/SFX/ui_click.wav");
+            }
+            
             string targetScene = "";
             
             switch (sceneName)
             {
                 case "MainMenu":
                     targetScene = MainMenuScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/main_theme.ogg");
                     break;
                 case "Game":
                     targetScene = GameScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/peaceful_theme.mp3");
                     break;
                 case "Battle":
                     targetScene = BattleScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/battle_theme.mp3");
                     break;
                 case "Divination":
                     targetScene = DivinationScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/divination_theme.mp3");
                     break;
                 case "Inventory":
                     targetScene = InventoryScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/peaceful_theme.mp3");
                     break;
                 case "Exploration":
                     targetScene = ExplorationScene;
+                    PlayBackgroundMusic("res://Resources/Audio/Music/exploration_theme.mp3");
+                    break;
+                case "Options":
+                    targetScene = "res://Scenes/Options.tscn";
+                    // 保持当前音乐，不切换
                     break;
                 default:
                     GD.Print("未知场景名称：" + sceneName);
@@ -325,6 +361,15 @@ public partial class GameManager : Node
     {
         try
         {
+            // 播放UI点击音效
+            if (_sfxEnabled)
+            {
+                PlaySoundEffect("res://Resources/Audio/SFX/ui_click.wav");
+            }
+            
+            // 播放修炼场景音乐
+            PlayBackgroundMusic("res://Resources/Audio/Music/cultivation_theme.mp3");
+            
             var tree = GetSceneTreeSafe();
             if (tree != null)
             {
@@ -546,6 +591,244 @@ public partial class GameManager : Node
         PlayerData.UpdateTemporaryBonuses((float)delta);
         
         // 其他处理逻辑...
+    }
+
+    // 线性音量转换为分贝
+    private float LinearToDb(float linear)
+    {
+        if (linear <= 0)
+            return -80.0f; // 静音
+        
+        return Mathf.LinearToDb(linear);
+    }
+    
+    // 播放背景音乐
+    public void PlayBackgroundMusic(string path, bool loop = true)
+    {
+        try
+        {
+            // 如果已经在播放相同的音乐，则不重新开始
+            if (_currentMusic == path && _musicPlayer.Playing)
+                return;
+                
+            // 如果音乐被禁用，则不播放
+            if (!_musicEnabled)
+                return;
+                
+            // 加载音乐资源
+            if (ResourceLoader.Exists(path))
+            {
+                var music = ResourceLoader.Load<AudioStream>(path);
+                if (music != null)
+                {
+                    _musicPlayer.Stream = music;
+                    _musicPlayer.Playing = true;
+                    _currentMusic = path;
+                    
+                    if (loop)
+                    {
+                        _musicPlayer.Finished += () => _musicPlayer.Play();
+                    }
+                    
+                    GD.Print($"正在播放背景音乐: {path}");
+                }
+                else
+                {
+                    GD.PrintErr($"无法加载音乐资源: {path}");
+                }
+            }
+            else
+            {
+                GD.PrintErr($"音乐文件不存在: {path}");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"播放背景音乐时出错: {ex.Message}");
+        }
+    }
+    
+    // 播放音效
+    public void PlaySoundEffect(string path)
+    {
+        try
+        {
+            // 如果音效被禁用，则不播放
+            if (!_sfxEnabled)
+                return;
+                
+            // 加载音效资源
+            if (ResourceLoader.Exists(path))
+            {
+                var sfx = ResourceLoader.Load<AudioStream>(path);
+                if (sfx != null)
+                {
+                    _sfxPlayer.Stream = sfx;
+                    _sfxPlayer.Play();
+                }
+                else
+                {
+                    GD.PrintErr($"无法加载音效资源: {path}");
+                }
+            }
+            else
+            {
+                GD.PrintErr($"音效文件不存在: {path}");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"播放音效时出错: {ex.Message}");
+        }
+    }
+    
+    // 停止背景音乐
+    public void StopBackgroundMusic()
+    {
+        _musicPlayer.Stop();
+        _currentMusic = "";
+    }
+    
+    // 设置音乐音量
+    public void SetMusicVolume(float volume)
+    {
+        _musicVolume = Mathf.Clamp(volume, 0.0f, 1.0f);
+        _musicPlayer.VolumeDb = LinearToDb(_musicVolume);
+    }
+    
+    // 设置音效音量
+    public void SetSfxVolume(float volume)
+    {
+        _sfxVolume = Mathf.Clamp(volume, 0.0f, 1.0f);
+        _sfxPlayer.VolumeDb = LinearToDb(_sfxVolume);
+    }
+    
+    // 启用/禁用音乐
+    public void EnableMusic(bool enabled)
+    {
+        _musicEnabled = enabled;
+        if (!enabled)
+        {
+            _musicPlayer.Stop();
+        }
+        else if (!string.IsNullOrEmpty(_currentMusic))
+        {
+            PlayBackgroundMusic(_currentMusic);
+        }
+    }
+    
+    // 启用/禁用音效
+    public void EnableSfx(bool enabled)
+    {
+        _sfxEnabled = enabled;
+    }
+    
+    // 获取当前音乐音量
+    public float GetMusicVolume()
+    {
+        return _musicVolume;
+    }
+    
+    // 获取当前音效音量
+    public float GetSfxVolume()
+    {
+        return _sfxVolume;
+    }
+    
+    // 是否启用音乐
+    public bool IsMusicEnabled()
+    {
+        return _musicEnabled;
+    }
+    
+    // 是否启用音效
+    public bool IsSfxEnabled()
+    {
+        return _sfxEnabled;
+    }
+
+    // 手动使GameManager成为持久节点（替代AutoLoad）
+    public static void MakePersistent(GameManager manager)
+    {
+        try
+        {
+            if (Engine.GetMainLoop() is SceneTree tree && tree.Root != null)
+            {
+                // 检查是否已经在root下
+                if (manager.GetParent() == tree.Root && manager.Name == "GameManager")
+                {
+                    GD.Print("GameManager已经是根节点的子节点，无需重新父化");
+                    _instance = manager;
+                    return;
+                }
+                
+                // 如果已经存在实例，销毁此实例
+                if (_instance != null && _instance != manager)
+                {
+                    GD.Print("已存在GameManager实例，销毁当前实例");
+                    manager.QueueFree();
+                    return;
+                }
+                
+                // 设置单例实例
+                _instance = manager;
+                
+                // 设置节点名称和处理模式
+                manager.Name = "GameManager";
+                manager.ProcessMode = ProcessModeEnum.Always;
+                
+                // 检查节点是否正在场景树中
+                if (manager.IsInsideTree())
+                {
+                    // 从父节点移除并添加到根节点（使用延迟调用避免冲突）
+                    if (manager.GetParent() != null && manager.GetParent() != tree.Root)
+                    {
+                        // 设置一个延迟调用，避免在父节点忙时调用
+                        manager.CallDeferred("_ReparentToRoot");
+                    }
+                }
+                else
+                {
+                    // 节点不在场景树中，直接添加到根节点
+                    tree.Root.CallDeferred("add_child", manager);
+                }
+                
+                GD.Print("GameManager已手动设置为持久节点");
+            }
+            else
+            {
+                GD.PrintErr("无法获取SceneTree，不能设置GameManager为持久节点");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("设置GameManager为持久节点时出错: " + ex.Message);
+        }
+    }
+
+    // 延迟调用的方法，将节点重新父化到根节点
+    private void _ReparentToRoot()
+    {
+        GD.Print("正在重新父化GameManager到根节点");
+        try
+        {
+            var parent = GetParent();
+            if (parent != null)
+            {
+                parent.RemoveChild(this);
+                
+                var tree = GetTree();
+                if (tree != null && tree.Root != null && !IsInsideTree())
+                {
+                    tree.Root.AddChild(this);
+                    GD.Print("GameManager已成功移动到根节点");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("重新父化GameManager时出错: " + ex.Message);
+        }
     }
 }
 

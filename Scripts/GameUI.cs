@@ -19,6 +19,7 @@ public partial class GameUI : Control
 	private Button _divinationButton;
 	private Button _inventoryButton;
 	private Button _exploreButton;
+	private Button _optionsButton;
 	
 	// GameManager引用
 	private GameManager _gameManager;
@@ -60,6 +61,7 @@ public partial class GameUI : Control
 		_divinationButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/DivinationButton");
 		_inventoryButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/InventoryButton");
 		_exploreButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/ExploreButton");
+		_optionsButton = GetNode<Button>("MainContent/TopPanel/OptionsButton");
 		
 		// 连接按钮信号
 		_cultivateButton.Pressed += OnCultivateButtonPressed;
@@ -67,6 +69,16 @@ public partial class GameUI : Control
 		_divinationButton.Pressed += OnDivinationButtonPressed;
 		_inventoryButton.Pressed += OnInventoryButtonPressed;
 		_exploreButton.Pressed += OnExploreButtonPressed;
+		
+		// 连接选项按钮信号
+		if (_optionsButton != null)
+		{
+			_optionsButton.Pressed += OnOptionsButtonPressed;
+		}
+		else
+		{
+			GD.PrintErr("未找到选项按钮，请确保场景中包含该按钮");
+		}
 		
 		// 更新界面
 		UpdateUI();
@@ -178,5 +190,18 @@ public partial class GameUI : Control
 	{
 		// 切换到探索界面
 		_gameManager.ShowExplorationMap();
+	}
+	
+	private void OnOptionsButtonPressed()
+	{
+		// 使用GameManager的方法切换到选项界面
+		if (_gameManager != null)
+		{
+			_gameManager.NavigateToScene("Options");
+		}
+		else
+		{
+			GD.PrintErr("GameManager不可用，无法切换到选项界面");
+		}
 	}
 } 
