@@ -50,6 +50,9 @@ public partial class PlayerData : Resource
         {10, "渡劫期"}
     };
     
+    // 临时加成数据结构
+    private Dictionary<string, (float value, float duration, float elapsed)> _temporaryBonuses = new Dictionary<string, (float, float, float)>();
+    
     // 构造函数
     public PlayerData(string playerName = "修仙者")
     {
@@ -333,6 +336,56 @@ public partial class PlayerData : Resource
                 }
                 return false;
         }
+    }
+    
+    // 设置临时加成
+    public void SetTemporaryBonus(string bonusType, float value, float duration)
+    {
+        _temporaryBonuses[bonusType] = (value, duration, 0);
+    }
+    
+    // 获取临时加成值
+    public float GetTemporaryBonus(string bonusType)
+    {
+        if (_temporaryBonuses.ContainsKey(bonusType) && _temporaryBonuses[bonusType].elapsed < _temporaryBonuses[bonusType].duration)
+        {
+            return _temporaryBonuses[bonusType].value;
+        }
+        return 0f;
+    }
+    
+    // 更新临时加成状态 (在游戏循环中调用)
+    public void UpdateTemporaryBonuses(float delta)
+    {
+        List<string> expiredBonuses = new List<string>();
+        
+        foreach (var key in _temporaryBonuses.Keys)
+        {
+            var (value, duration, elapsed) = _temporaryBonuses[key];
+            float newElapsed = elapsed + delta;
+            
+            if (newElapsed >= duration)
+            {
+                expiredBonuses.Add(key);
+            }
+            else
+            {
+                _temporaryBonuses[key] = (value, duration, newElapsed);
+            }
+        }
+        
+        // 移除过期的加成
+        foreach (var key in expiredBonuses)
+        {
+            _temporaryBonuses.Remove(key);
+        }
+    }
+    
+    // 判断是否有指定的临时加成
+    public bool HasTemporaryBonus(string bonusType)
+    {
+        return _temporaryBonuses.ContainsKey(bonusType) && 
+               _temporaryBonuses[bonusType].elapsed < _temporaryBonuses[bonusType].duration;
     }
     
     // 突破境界相关方法可以在这里添加

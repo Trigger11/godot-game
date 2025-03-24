@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://b6rpn8hc60oar"]
+[gd_scene load_steps=7 format=3 uid="uid://b6rpn8hc60oar"]
 
-[ext_resource type="Script" uid="uid://cjgu07ujjn856" path="res://Scripts/GameManager.cs" id="1_3x1qd"]
 [ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_pu7y8"]
 [ext_resource type="Script" uid="uid://dmyiy44ydwpr" path="res://Scripts/GameUI.cs" id="2_qwxc3"]
 [ext_resource type="Script" uid="uid://cnglwe7mqm2f6" path="res://Scripts/GameController.cs" id="3_x1qxb"]
@@ -51,9 +50,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_qwxc3")
-
-[node name="GameManager" type="Node" parent="."]
-script = ExtResource("1_3x1qd")
 
 [node name="GameController" type="Node" parent="."]
 script = ExtResource("3_x1qxb")

@@ -24,8 +24,22 @@ public partial class GameController : Node
     
     public override void _Ready()
     {
-        // 获取GameManager引用
-        _gameManager = GetNode<GameManager>("../GameManager");
+        // 获取GameManager引用 - 使用单例模式
+        _gameManager = GameManager.Instance;
+        
+        // 如果GameManager实例不存在，通过节点获取
+        if (_gameManager == null)
+        {
+            GD.PushWarning("GameManager单例不存在，尝试通过节点获取");
+            _gameManager = GetNode<GameManager>("/root/GameManager");
+        }
+        
+        // 如果仍然为空，输出错误
+        if (_gameManager == null)
+        {
+            GD.PrintErr("无法获取GameManager实例，请确保已设置为自动加载");
+            return;
+        }
         
         // 初始化UI引用
         _playerNameLabel = GetNode<Label>("../MainContent/TopPanel/HBoxContainer/PlayerName");
@@ -40,10 +54,10 @@ public partial class GameController : Node
         _techniqueList = GetNode<VBoxContainer>("../MainContent/LeftPanel/VBoxContainer/TechniqueList");
         
         // 获取按钮引用
-        _cultivateButton = GetNode<Button>("../MainContent/ActionPanel/MarginContainer/VBoxContainer/HBoxContainer/CultivateButton");
-        _battleButton = GetNode<Button>("../MainContent/ActionPanel/MarginContainer/VBoxContainer/HBoxContainer/BattleButton");
-        _divinationButton = GetNode<Button>("../MainContent/ActionPanel/MarginContainer/VBoxContainer/HBoxContainer/DivinationButton");
-        _inventoryButton = GetNode<Button>("../MainContent/ActionPanel/MarginContainer/VBoxContainer/HBoxContainer/InventoryButton");
+        _cultivateButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/CultivateButton");
+        _battleButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/BattleButton");
+        _divinationButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/DivinationButton");
+        _inventoryButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/InventoryButton");
         
         // 绑定按钮事件
         _cultivateButton.Pressed += OnCultivateButtonPressed;
@@ -101,25 +115,53 @@ public partial class GameController : Node
     
     private void OnCultivateButtonPressed()
     {
-        // 打开修炼界面
-        _gameManager.OpenCultivationScene();
+        // 打开修炼界面 - 使用GameManager安全方法
+        if (_gameManager != null)
+        {
+            _gameManager.OpenCultivationScene();
+        }
+        else
+        {
+            GD.PrintErr("GameManager不可用，无法切换到修炼界面");
+        }
     }
     
     private void OnBattleButtonPressed()
     {
-        // 切换到战斗场景
-        GetTree().ChangeSceneToFile("res://Scenes/Battle.tscn");
+        // 切换到战斗场景 - 使用GameManager安全方法
+        if (_gameManager != null)
+        {
+            _gameManager.NavigateToScene("Battle");
+        }
+        else
+        {
+            GD.PrintErr("GameManager不可用，无法切换到战斗界面");
+        }
     }
     
     private void OnDivinationButtonPressed()
     {
-        // 切换到占卜场景
-        GetTree().ChangeSceneToFile("res://Scenes/Divination.tscn");
+        // 切换到占卜场景 - 使用GameManager安全方法
+        if (_gameManager != null)
+        {
+            _gameManager.NavigateToScene("Divination");
+        }
+        else
+        {
+            GD.PrintErr("GameManager不可用，无法切换到占卜界面");
+        }
     }
     
     private void OnInventoryButtonPressed()
     {
-        // 切换到背包场景
-        GetTree().ChangeSceneToFile("res://Scenes/Inventory.tscn");
+        // 切换到背包场景 - 使用GameManager安全方法
+        if (_gameManager != null)
+        {
+            _gameManager.NavigateToScene("Inventory");
+        }
+        else
+        {
+            GD.PrintErr("GameManager不可用，无法切换到背包界面");
+        }
     }
 } 

@@ -5,11 +5,25 @@ using System.Collections.Generic;
 // 游戏管理器，使用单例模式
 public partial class GameManager : Node
 {
-    // 单例实例
+    // 单例实例 - 使用属性而不是字段+属性组合
     private static GameManager _instance;
     public static GameManager Instance
     {
-        get { return _instance; }
+        get
+        {
+            // 如果实例为空，尝试从场景树获取
+            if (_instance == null)
+            {
+                // 注意：这种方式只在GameManager已经作为AutoLoad添加后有效
+                _instance = Engine.GetSingleton("GameManager") as GameManager;
+                
+                if (_instance == null)
+                {
+                    GD.PrintErr("GameManager单例未找到，请确保已在项目设置中添加为AutoLoad");
+                }
+            }
+            return _instance;
+        }
     }
     
     // 游戏数据
@@ -53,8 +67,23 @@ public partial class GameManager : Node
     // 初始化
     public override void _Ready()
     {
+        GD.Print("GameManager初始化中...");
+        
+        // 使GameManager在场景切换时不会被销毁
+        ProcessMode = ProcessModeEnum.Always;
+        
         // 设置单例实例
-        _instance = this;
+        if (_instance == null)
+        {
+            _instance = this;
+            GD.Print("GameManager单例已设置");
+        }
+        else if (_instance != this)
+        {
+            GD.PushWarning("GameManager单例已存在，销毁当前实例");
+            QueueFree();
+            return;
+        }
         
         // 检查必要资源
         CheckResources();
@@ -69,6 +98,27 @@ public partial class GameManager : Node
         
         // 初始化物品列表
         InitItems();
+        
+        GD.Print("GameManager初始化完成");
+    }
+    
+    // 确保GameManager不会在场景切换时被销毁
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        
+        // 使节点在加载新场景时不被移除
+        GetTree().SetAutoAcceptQuit(false);
+    }
+    
+    // 处理应用程序退出
+    public override void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+        {
+            // 在这里可以处理游戏退出前的保存操作
+            GetTree().Quit();
+        }
     }
     
     // 检查必要资源
@@ -102,23 +152,38 @@ public partial class GameManager : Node
     // 开始新游戏
     public void StartNewGame(string playerName)
     {
-        // 创建新的玩家数据
-        PlayerData = new PlayerData(playerName);
-        
-        // 初始化基础功法和物品
-        InitTechniques();
-        InitItems();
-        
-        // 重置占卜系统
-        DivinationSystem = new DivinationSystem();
-        DivinationSystem.InitializeDeck();
-        DivinationSystem.ShuffleDeck();
-        
-        // 切换到游戏场景
-        GetTree().ChangeSceneToFile("res://Scenes/Game.tscn");
-        
-        // 发送玩家数据更新信号
-        EmitSignal(SignalName.PlayerDataUpdated);
+        try
+        {
+            // 创建新的玩家数据
+            PlayerData = new PlayerData(playerName);
+            
+            // 初始化基础功法和物品
+            InitTechniques();
+            InitItems();
+            
+            // 重置占卜系统
+            DivinationSystem = new DivinationSystem();
+            DivinationSystem.InitializeDeck();
+            DivinationSystem.ShuffleDeck();
+            
+            // 切换到游戏场景
+            var tree = GetSceneTreeSafe();
+            if (tree != null)
+            {
+                tree.ChangeSceneToFile("res://Scenes/Game.tscn");
+            }
+            else
+            {
+                GD.PrintErr("无法获取SceneTree，场景切换失败");
+            }
+            
+            // 发送玩家数据更新信号
+            EmitSignal(SignalName.PlayerDataUpdated);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("开始新游戏时发生错误: " + ex.Message);
+        }
     }
     
     // 保存游戏
@@ -193,10 +258,87 @@ public partial class GameManager : Node
         }
     }
     
+    // 获取SceneTree的安全方法
+    private SceneTree GetSceneTreeSafe()
+    {
+        try
+        {
+            return GetTree();
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("获取SceneTree失败: " + ex.Message);
+            return null;
+        }
+    }
+    
+    // 扩展功能：导航到不同场景
+    public void NavigateToScene(string sceneName)
+    {
+        try
+        {
+            string targetScene = "";
+            
+            switch (sceneName)
+            {
+                case "MainMenu":
+                    targetScene = MainMenuScene;
+                    break;
+                case "Game":
+                    targetScene = GameScene;
+                    break;
+                case "Battle":
+                    targetScene = BattleScene;
+                    break;
+                case "Divination":
+                    targetScene = DivinationScene;
+                    break;
+                case "Inventory":
+                    targetScene = InventoryScene;
+                    break;
+                case "Exploration":
+                    targetScene = ExplorationScene;
+                    break;
+                default:
+                    GD.Print("未知场景名称：" + sceneName);
+                    return;
+            }
+            
+            var tree = GetSceneTreeSafe();
+            if (tree != null)
+            {
+                tree.ChangeSceneToFile(targetScene);
+            }
+            else
+            {
+                GD.PrintErr("无法获取SceneTree，场景切换失败");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("场景导航时发生错误: " + ex.Message);
+        }
+    }
+    
     // 在GameManager类中添加打开修炼界面的方法
     public void OpenCultivationScene()
     {
-        GetTree().ChangeSceneToFile("res://Scenes/Cultivation.tscn");
+        try
+        {
+            var tree = GetSceneTreeSafe();
+            if (tree != null)
+            {
+                tree.ChangeSceneToFile("res://Scenes/Cultivation.tscn");
+            }
+            else
+            {
+                GD.PrintErr("无法获取SceneTree，无法打开修炼界面");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr("打开修炼界面时发生错误: " + ex.Message);
+        }
     }
     
     // 初始化所有可用功法
@@ -263,39 +405,6 @@ public partial class GameManager : Node
                 PlayerData.AddAttributePoints(attributes[random.Next(attributes.Length)], 2);
                 break;
         }
-    }
-    
-    // 扩展功能：导航到不同场景
-    public void NavigateToScene(string sceneName)
-    {
-        string targetScene = "";
-        
-        switch (sceneName)
-        {
-            case "MainMenu":
-                targetScene = MainMenuScene;
-                break;
-            case "Game":
-                targetScene = GameScene;
-                break;
-            case "Battle":
-                targetScene = BattleScene;
-                break;
-            case "Divination":
-                targetScene = DivinationScene;
-                break;
-            case "Inventory":
-                targetScene = InventoryScene;
-                break;
-            case "Exploration":
-                targetScene = ExplorationScene;
-                break;
-            default:
-                GD.Print("未知场景名称：" + sceneName);
-                return;
-        }
-        
-        GetTree().ChangeSceneToFile(targetScene);
     }
     
     // 处理战斗结果
@@ -429,6 +538,14 @@ public partial class GameManager : Node
         {
             PlayerData.Cultivate(techniqueName, duration);
         }
+    }
+
+    public override void _Process(double delta)
+    {
+        // 更新临时加成
+        PlayerData.UpdateTemporaryBonuses((float)delta);
+        
+        // 其他处理逻辑...
     }
 }
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwtx2tuxf76yl"]
+[gd_scene load_steps=5 format=3 uid="uid://dwtx2tuxf76yl"]
 
 [ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_bxcmg"]
+[ext_resource type="Script" path="res://Scripts/BattleSystem.cs" id="1_tgpk5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
 bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
@@ -35,6 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_tgpk5")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -220,6 +222,7 @@ layout_mode = 2
 theme_override_colors/default_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/normal_font = ExtResource("1_bxcmg")
 theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
 text = "妖狐向你袭来！
 
 你使用了「气爆术」，造成了15点伤害！
@@ -253,10 +256,10 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
+[node name="StatsContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="PlayerName" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayerName" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
@@ -264,21 +267,21 @@ theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 20
 text = "修仙者"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 16
 text = "生命值："
 
-[node name="PlayerHealthBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayerHealthBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -286,24 +289,24 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 value = 92.0
 show_percentage = false
 
-[node name="PlayerHealthLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayerHealthLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 16
 text = "92/100"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 16
 text = "气力："
 
-[node name="PlayerQiBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="PlayerQiBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -311,7 +314,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 value = 66.0
 show_percentage = false
 
-[node name="PlayerQiLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="PlayerQiLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
@@ -321,12 +324,12 @@ text = "33/50"
 [node name="HSeparator" type="HSeparator" parent="PlayerPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
+[node name="ActionButtons" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="AttackButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="AttackButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
@@ -336,7 +339,17 @@ theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
 text = "攻击"
 
-[node name="SkillButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="DefendButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 18
+text = "防御"
+
+[node name="SkillButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
@@ -346,7 +359,7 @@ theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
 text = "技能"
 
-[node name="ItemButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="ItemButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
@@ -356,7 +369,7 @@ theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
 text = "物品"
 
-[node name="FleeButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="EscapeButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
@@ -365,3 +378,63 @@ theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
 text = "逃跑"
+
+[node name="SkillPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -200.0
+offset_right = 250.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="SkillPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SkillPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="SkillPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 24
+text = "选择技能"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="SkillPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SkillsList" type="VBoxContainer" parent="SkillPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="BackButton" type="Button" parent="SkillPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 18
+text = "返回"
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
