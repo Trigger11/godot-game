@@ -1,0 +1,510 @@
+[gd_scene load_steps=13 format=3 uid="uid://cn53t7rpfjk47"]
+
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_7psy8"]
+[ext_resource type="Script" uid="uid://81jimmyx2o36" path="res://Scripts/CultivationSystem.cs" id="1_qmpf8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i38kq"]
+bg_color = Color(0.160784, 0.176471, 0.247059, 0.94902)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.745098, 0.560784, 0.337255, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l5vtt"]
+bg_color = Color(0.396078, 0.305882, 0.207843, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.694118, 0.560784, 0.368627, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0kpg4"]
+bg_color = Color(0.270588, 0.203922, 0.145098, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.694118, 0.560784, 0.368627, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ug28q"]
+bg_color = Color(0.470588, 0.356863, 0.231373, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.694118, 0.560784, 0.368627, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qxmrr"]
+bg_color = Color(0.243137, 0.192157, 0.129412, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.694118, 0.560784, 0.368627, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_egwjm"]
+bg_color = Color(0.156863, 0.235294, 0.294118, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.321569, 0.443137, 0.537255, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h4roa"]
+bg_color = Color(0.47451, 0.243137, 0.243137, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.623529, 0.380392, 0.380392, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5mky"]
+bg_color = Color(0.305882, 0.384314, 0.262745, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.509804, 0.623529, 0.435294, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8q55"]
+bg_color = Color(0.247059, 0.360784, 0.368627, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.407843, 0.564706, 0.575686, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Cultivation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qmpf8")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="TopPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="TitleLabel" type="Label" parent="TopPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -67.5
+offset_top = 10.0
+offset_right = 67.5
+offset_bottom = 53.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_colors/font_shadow_color = Color(0.160784, 0.133333, 0.101961, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 32
+text = "修为修炼"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackButton" type="Button" parent="TopPanel"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 15.0
+offset_top = -22.0
+offset_right = 95.0
+offset_bottom = 22.0
+grow_vertical = 2
+theme_override_colors/font_hover_color = Color(1, 0.901961, 0.756863, 1)
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_l5vtt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0kpg4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ug28q")
+text = "返回"
+
+[node name="MainContent" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MainContent"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+split_offset = 200
+
+[node name="LeftPanel" type="Panel" parent="MainContent/HSplitContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HSplitContainer/LeftPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="AttributesTitle" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 24
+text = "当前属性"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AttributeNames" type="VBoxContainer" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="QiPowerName" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeNames"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "气力："
+
+[node name="SpiritName" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeNames"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "神识："
+
+[node name="BodyName" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeNames"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "体魄："
+
+[node name="FateName" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeNames"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "命运："
+
+[node name="AttributeValues" type="VBoxContainer" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="QiPowerValue" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeValues"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "10"
+horizontal_alignment = 2
+
+[node name="SpiritValue" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeValues"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "10"
+horizontal_alignment = 2
+
+[node name="BodyValue" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeValues"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "10"
+horizontal_alignment = 2
+
+[node name="FateValue" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/HBoxContainer/AttributeValues"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "10"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TechniquesTitle" type="Label" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 24
+text = "修炼功法"
+horizontal_alignment = 1
+
+[node name="TechniquesList" type="VBoxContainer" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 5
+
+[node name="TechniqueItem" type="Button" parent="MainContent/HSplitContainer/LeftPanel/VBoxContainer/TechniquesList"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.988235, 0.921569, 0.8, 1)
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_qxmrr")
+theme_override_styles/normal = SubResource("StyleBoxFlat_egwjm")
+text = "基础修炼术"
+alignment = 0
+
+[node name="RightPanel" type="Panel" parent="MainContent/HSplitContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContent/HSplitContainer/RightPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HSplitContainer/RightPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="CultivationTitle" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 28
+text = "修炼方式"
+horizontal_alignment = 1
+
+[node name="CultivationOptionsContainer" type="VBoxContainer" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="QiCultivation" type="Button" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(1, 0.901961, 0.756863, 1)
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4roa")
+theme_override_styles/normal = SubResource("StyleBoxFlat_e5mky")
+text = "气元修炼"
+
+[node name="QiCultivationDescription" type="RichTextLabel" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.831373, 0.776471, 0.698039, 1)
+theme_override_fonts/normal_font = ExtResource("1_7psy8")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "专注于提升气力，通过冥想感受天地灵气，提高自身气力。[color=#c8e6b3]气力+3[/color]，[color=#e6d5b3]神识+1[/color]"
+fit_content = true
+
+[node name="SpiritCultivation" type="Button" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(1, 0.901961, 0.756863, 1)
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4roa")
+theme_override_styles/normal = SubResource("StyleBoxFlat_j8q55")
+text = "心神修炼"
+
+[node name="SpiritCultivationDescription" type="RichTextLabel" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.831373, 0.776471, 0.698039, 1)
+theme_override_fonts/normal_font = ExtResource("1_7psy8")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "专注于提升神识，通过参悟天道法则，扩展心神感知。[color=#c8e6b3]神识+3[/color]，[color=#e6d5b3]气力+1[/color]"
+fit_content = true
+
+[node name="BodyCultivation" type="Button" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(1, 0.901961, 0.756863, 1)
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4roa")
+theme_override_styles/normal = SubResource("StyleBoxFlat_h4roa")
+text = "炼体修炼"
+
+[node name="BodyCultivationDescription" type="RichTextLabel" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/CultivationOptionsContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.831373, 0.776471, 0.698039, 1)
+theme_override_fonts/normal_font = ExtResource("1_7psy8")
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "专注于炼体，通过锤炼肉身，提高自身强度。[color=#c8e6b3]体魄+3[/color]，[color=#e6d5b3]气力+1[/color]"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CurrentEffectsTitle" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.909804, 0.807843, 0.658824, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 24
+text = "修炼效果"
+horizontal_alignment = 1
+
+[node name="EffectsPanel" type="Panel" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SelectedTechniqueLabel" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.956863, 0.843137, 0.654902, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 20
+text = "当前功法：基础修炼术"
+
+[node name="CultivationSpeedLabel" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 18
+text = "修炼速度：+10%"
+
+[node name="ExperienceGainLabel" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 18
+text = "经验获取：10/分钟"
+
+[node name="ExpProgress" type="ProgressBar" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 18
+max_value = 1.0
+value = 0.3
+show_percentage = false
+
+[node name="ProgressLabel" type="Label" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer/EffectsPanel/MarginContainer/VBoxContainer/ExpProgress"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.960784, 0.886275, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 18
+text = "30 / 100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StartCultivationButton" type="Button" parent="MainContent/HSplitContainer/RightPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_hover_color = Color(1, 0.901961, 0.756863, 1)
+theme_override_colors/font_color = Color(0.839216, 0.764706, 0.611765, 1)
+theme_override_fonts/font = ExtResource("1_7psy8")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_l5vtt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0kpg4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ug28q")
+text = "开始修炼"
+
+[node name="Timer" type="Timer" parent="."]

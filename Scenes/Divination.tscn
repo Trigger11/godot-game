@@ -1,0 +1,349 @@
+[gd_scene load_steps=4 format=3 uid="uid://djvtdq8w6y7wf"]
+
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_1kndr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.317647)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i38kq"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.784314)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Divination" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0705882, 0.0784314, 0.109804, 1)
+
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitlePanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 20.0
+offset_right = 300.0
+offset_bottom = 100.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="TitleLabel" type="Label" parent="TitlePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.870588, 0.729412, 0.482353, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.603922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 36
+text = "天机占卜"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DescriptionPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -200.0
+offset_right = 500.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="DescriptionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="DivinationText" type="RichTextLabel" parent="DescriptionPanel/MarginContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/normal_font = ExtResource("1_1kndr")
+theme_override_font_sizes/normal_font_size = 18
+text = "天机变幻无常，命运掌握在你手中。
+
+抽取三张牌，它们将揭示你的过去、现在与未来。选择你认为最适合的道路，将会影响你修仙的方向。"
+
+[node name="CardsContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = 20.0
+offset_right = 450.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Card1" type="Panel" parent="CardsContainer"]
+custom_minimum_size = Vector2(180, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="CardsContainer/Card1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CardsContainer/Card1/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CardImage" type="TextureRect" parent="CardsContainer/Card1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CardName" type="Label" parent="CardsContainer/Card1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 18
+text = "太极"
+horizontal_alignment = 1
+
+[node name="CardDescription" type="Label" parent="CardsContainer/Card1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "万物的起源，阴阳的平衡。"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SelectButton" type="Button" parent="CardsContainer/Card1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "选择"
+
+[node name="Card2" type="Panel" parent="CardsContainer"]
+custom_minimum_size = Vector2(180, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="CardsContainer/Card2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CardsContainer/Card2/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CardImage" type="TextureRect" parent="CardsContainer/Card2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CardName" type="Label" parent="CardsContainer/Card2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 18
+text = "天道"
+horizontal_alignment = 1
+
+[node name="CardDescription" type="Label" parent="CardsContainer/Card2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "顺应天道，得道多助。"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SelectButton" type="Button" parent="CardsContainer/Card2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "选择"
+
+[node name="Card3" type="Panel" parent="CardsContainer"]
+custom_minimum_size = Vector2(180, 260)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="CardsContainer/Card3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CardsContainer/Card3/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CardImage" type="TextureRect" parent="CardsContainer/Card3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CardName" type="Label" parent="CardsContainer/Card3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 18
+text = "逆行"
+horizontal_alignment = 1
+
+[node name="CardDescription" type="Label" parent="CardsContainer/Card3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "逆天而行，必有灾殃。"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SelectButton" type="Button" parent="CardsContainer/Card3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 14
+text = "选择"
+
+[node name="ControlsPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -80.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ControlsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="RedrawButton" type="Button" parent="ControlsPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 18
+text = "重新抽牌"
+
+[node name="ReturnButton" type="Button" parent="ControlsPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_1kndr")
+theme_override_font_sizes/font_size = 18
+text = "返回"

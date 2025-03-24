@@ -1,0 +1,371 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyrw7wfcbvk1j"]
+
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_pcgdv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.317647)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i38kq"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.784314)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Inventory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0705882, 0.0784314, 0.109804, 1)
+
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitlePanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 20.0
+offset_right = 300.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="TitleLabel" type="Label" parent="TitlePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.870588, 0.729412, 0.482353, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.603922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 30
+text = "仙府"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MainContent" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 90.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="CategoryPanel" type="Panel" parent="MainContent/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HBoxContainer/CategoryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="CategoryLabel" type="Label" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 20
+text = "物品分类"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="AllButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "全部物品"
+alignment = 0
+
+[node name="ConsumableButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "消耗品"
+alignment = 0
+
+[node name="HerbButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "草药"
+alignment = 0
+
+[node name="PillButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "丹药"
+alignment = 0
+
+[node name="WeaponButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "武器"
+alignment = 0
+
+[node name="ArtifactButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "法宝"
+alignment = 0
+
+[node name="QuestButton" type="Button" parent="MainContent/HBoxContainer/CategoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "任务物品"
+alignment = 0
+
+[node name="ItemsPanel" type="Panel" parent="MainContent/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContent/HBoxContainer/ItemsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HBoxContainer/ItemsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SearchBar" type="LineEdit" parent="MainContent/HBoxContainer/ItemsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+placeholder_text = "搜索物品..."
+clear_button_enabled = true
+
+[node name="ItemList" type="ItemList" parent="MainContent/HBoxContainer/ItemsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+
+[node name="DetailsPanel" type="Panel" parent="MainContent/HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContent/HBoxContainer/DetailsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailsLabel" type="Label" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 20
+text = "物品详情"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ItemImage" type="TextureRect" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemName" type="Label" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 18
+text = "聚气丹"
+horizontal_alignment = 1
+
+[node name="ItemType" type="Label" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 14
+text = "类型：丹药"
+horizontal_alignment = 1
+
+[node name="ItemRarity" type="Label" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 14
+text = "品质：普通"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ItemDescription" type="RichTextLabel" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/normal_font = ExtResource("1_pcgdv")
+theme_override_font_sizes/normal_font_size = 16
+text = "基础丹药，可以恢复少量气力。
+
+效果：
+- 恢复20点气力"
+
+[node name="UseButton" type="Button" parent="MainContent/HBoxContainer/DetailsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 18
+text = "使用"
+
+[node name="BottomPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -70.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = -20.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="SortButton" type="Button" parent="BottomPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "排序"
+
+[node name="ReturnButton" type="Button" parent="BottomPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_fonts/font = ExtResource("1_pcgdv")
+theme_override_font_sizes/font_size = 16
+text = "返回"

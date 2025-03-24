@@ -1,0 +1,71 @@
+[gd_scene load_steps=0 format=3 uid="uid://cgv2l2otyr40y"]
+
+[node name="ResourceErrorUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0705882, 0.0784314, 0.109804, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.603922)
+theme_override_font_sizes/font_size = 32
+text = "资源加载错误"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ErrorMessage" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_font_sizes/font_size = 18
+text = "缺少必要的资源文件。
+请参阅Resources目录下的README.md文件，
+下载并放置所需的资源文件。"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_font_sizes/font_size = 24
+text = "继续（部分功能可能不可用）"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
+theme_override_font_sizes/font_size = 24
+text = "退出" 
