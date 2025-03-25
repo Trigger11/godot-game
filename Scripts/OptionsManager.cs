@@ -9,6 +9,7 @@ public partial class OptionsManager : Control
     private CheckBox _musicEnabledCheckbox;
     private CheckBox _sfxEnabledCheckbox;
     private Button _backButton;
+    private Button _mainMenuButton;
     
     // GameManager引用
     private GameManager _gameManager;
@@ -23,7 +24,8 @@ public partial class OptionsManager : Control
         _sfxVolumeSlider = GetNode<HSlider>("Panel/VBoxContainer/SFXVolumeContainer/SFXVolumeSlider");
         _musicEnabledCheckbox = GetNode<CheckBox>("Panel/VBoxContainer/MusicEnabledContainer/MusicEnabledCheckbox");
         _sfxEnabledCheckbox = GetNode<CheckBox>("Panel/VBoxContainer/SFXEnabledContainer/SFXEnabledCheckbox");
-        _backButton = GetNode<Button>("Panel/VBoxContainer/BackButton");
+        _backButton = GetNode<Button>("Panel/VBoxContainer/ButtonContainer/BackButton");
+        _mainMenuButton = GetNode<Button>("Panel/VBoxContainer/ButtonContainer/MainMenuButton");
         
         // 设置初始值
         if (_gameManager != null)
@@ -40,6 +42,7 @@ public partial class OptionsManager : Control
         _musicEnabledCheckbox.Toggled += OnMusicEnabledToggled;
         _sfxEnabledCheckbox.Toggled += OnSfxEnabledToggled;
         _backButton.Pressed += OnBackButtonPressed;
+        _mainMenuButton.Pressed += OnMainMenuButtonPressed;
         
         // 播放测试音效
         if (_gameManager != null && _gameManager.IsSfxEnabled())
@@ -107,5 +110,20 @@ public partial class OptionsManager : Control
             // 返回上一个场景
             _gameManager.NavigateToScene("Game");
         }
+    }
+    
+    private void OnMainMenuButtonPressed()
+    {
+        if (_gameManager != null)
+        {
+            // 播放按钮音效
+            if (_gameManager.IsSfxEnabled())
+            {
+                _gameManager.PlaySoundEffect("res://Resources/Audio/SFX/ui_back.wav");
+            }
+        }
+        
+        // 返回主菜单
+        GetTree().ChangeSceneToFile("res://UI/MainMenuUI.tscn");
     }
 } 

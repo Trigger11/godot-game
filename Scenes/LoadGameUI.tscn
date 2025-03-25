@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://ro4125dy1nxx"]
+[gd_scene load_steps=4 format=3 uid="uid://dafliyydl72ag"]
 
-[ext_resource type="Script" uid="uid://gx6ramh8hvba" path="res://Scripts/CharacterCreationUI.cs" id="1_2x0kg"]
-[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_4x0kg"]
+[ext_resource type="Script" uid="uid://dj0an576ou1o5" path="res://Scripts/LoadGameUI.cs" id="1_fbsjl"]
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_0gtxv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
 bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
@@ -17,14 +17,14 @@ corner_radius_bottom_left = 15
 shadow_color = Color(0, 0, 0, 0.388235)
 shadow_size = 10
 
-[node name="CharacterCreation" type="Control"]
+[node name="LoadGameUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_2x0kg")
+script = ExtResource("1_fbsjl")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -42,10 +42,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+offset_left = -350.0
+offset_top = -250.0
+offset_right = 350.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
@@ -73,61 +73,61 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.494118)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/shadow_outline_size = 2
-theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_fonts/font = ExtResource("2_0gtxv")
 theme_override_font_sizes/font_size = 36
-text = "创建角色"
+text = "加载游戏"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="NameContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
+size_flags_vertical = 3
 
-[node name="NameLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/NameContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
-theme_override_font_sizes/font_size = 24
-text = "角色名称："
-
-[node name="NameInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/NameContainer"]
+[node name="SaveGameList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
-theme_override_font_sizes/font_size = 24
-placeholder_text = "请输入角色名称"
-
-[node name="GenderContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="GenderLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/GenderContainer"]
+[node name="NoSavesLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer/SaveGameList"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_fonts/font = ExtResource("2_0gtxv")
 theme_override_font_sizes/font_size = 24
-text = "选择性别："
+text = "暂无存档"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="GenderOption" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/GenderContainer"]
+[node name="ButtonContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
-theme_override_font_sizes/font_size = 24
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="ConfirmButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="LoadButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_hover_color = Color(0.94902, 0.85098, 0.67451, 1)
 theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
 theme_override_colors/font_pressed_color = Color(0.94902, 0.85098, 0.67451, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_fonts/font = ExtResource("2_0gtxv")
 theme_override_font_sizes/font_size = 24
-text = "确认创建"
+text = "加载选中存档"
+
+[node name="DeleteButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.94902, 0.85098, 0.67451, 1)
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_colors/font_pressed_color = Color(0.94902, 0.85098, 0.67451, 1)
+theme_override_fonts/font = ExtResource("2_0gtxv")
+theme_override_font_sizes/font_size = 24
+text = "删除选中存档"
 
 [node name="BackButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -136,6 +136,6 @@ size_flags_horizontal = 4
 theme_override_colors/font_hover_color = Color(0.94902, 0.85098, 0.67451, 1)
 theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
 theme_override_colors/font_pressed_color = Color(0.94902, 0.85098, 0.67451, 1)
-theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_fonts/font = ExtResource("2_0gtxv")
 theme_override_font_sizes/font_size = 24
 text = "返回"
