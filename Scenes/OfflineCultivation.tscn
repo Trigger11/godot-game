@@ -1,0 +1,208 @@
+[gd_scene load_steps=6 format=3 uid="uid://cs4uj78mktk80"]
+
+[ext_resource type="Script" path="res://Scripts/OfflineCultivationManager.cs" id="1_dfnvs"]
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_4x0kg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0, 0, 0.388235)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i38kq"]
+bg_color = Color(0.164706, 0.231373, 0.309804, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.203922)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrcq7"]
+bg_color = Color(0.815686, 0.65098, 0.407843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.937255, 0.835294, 0.658824, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.196078)
+shadow_size = 3
+
+[node name="OfflineCultivation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dfnvs")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0509804, 0.0705882, 0.12549, 1)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.937255, 0.835294, 0.658824, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.494118)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 36
+text = "离线修炼收益"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TimeAwayLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "你已经离线了：8小时30分钟"
+horizontal_alignment = 1
+
+[node name="InfoPanel" type="Panel" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/InfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/InfoPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/InfoPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "修炼收益"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer/InfoPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CultivationInfo" type="RichTextLabel" parent="Panel/MarginContainer/VBoxContainer/InfoPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/normal_font = ExtResource("2_4x0kg")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "[center]通过修炼[color=#66ccff]《太极功》[/color]，你累积了以下收益：[/center]"
+fit_content = true
+
+[node name="ExpGainLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.631373, 0.803922, 0.486275, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 22
+text = "获得经验值：500"
+horizontal_alignment = 1
+
+[node name="AttributeGainsContainer" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="AttrGain1" type="Label" parent="Panel/MarginContainer/VBoxContainer/AttributeGainsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.6, 1, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 20
+text = "气力 +15"
+horizontal_alignment = 1
+
+[node name="AttrGain2" type="Label" parent="Panel/MarginContainer/VBoxContainer/AttributeGainsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.3, 0.9, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 20
+text = "神识 +5"
+horizontal_alignment = 1
+
+[node name="TotalExpLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 18
+text = "当前经验：300/600（+500）
+距离下一级还需：0"
+horizontal_alignment = 1
+
+[node name="ClaimButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.117647, 0.129412, 0.184314, 1)
+theme_override_colors/font_color = Color(0.054902, 0.0666667, 0.117647, 1)
+theme_override_colors/font_pressed_color = Color(0.054902, 0.0666667, 0.117647, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_jrcq7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jrcq7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_jrcq7")
+text = "领取收益"

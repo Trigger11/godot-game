@@ -1,0 +1,135 @@
+[gd_scene load_steps=4 format=3 uid="uid://ro4125dy1nxx"]
+
+[ext_resource type="Script" path="res://Scripts/CharacterCreationUI.cs" id="1_2x0kg"]
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_4x0kg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0, 0, 0.388235)
+shadow_size = 10
+
+[node name="CharacterCreation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2x0kg")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0509804, 0.0705882, 0.12549, 1)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.937255, 0.835294, 0.658824, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.494118)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 2
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 36
+text = "创建角色"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/NameContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "角色名称："
+
+[node name="NameInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/NameContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "请输入角色名称"
+
+[node name="GenderContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GenderLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer/GenderContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "选择性别："
+
+[node name="GenderOption" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/GenderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.839216, 0.788235, 0.647059, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+
+[node name="ConfirmButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.054902, 0.0666667, 0.117647, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "确认创建"
+
+[node name="BackButton" type="Button" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.054902, 0.0666667, 0.117647, 1)
+theme_override_fonts/font = ExtResource("2_4x0kg")
+theme_override_font_sizes/font_size = 24
+text = "返回"
