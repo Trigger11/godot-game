@@ -64,6 +64,13 @@ public partial class BattleSystem : Control
 	// 定时器
 	private Timer _timer;
 	
+	// 音效相关
+	private AudioStreamPlayer _cardPlaySound;
+	private AudioStreamPlayer _cardNoEnergySound;
+	private AudioStreamPlayer _playerHitSound;
+	private AudioStreamPlayer _enemyHitSound;
+	private AudioStreamPlayer _victorySound;
+	
 	public override void _Ready()
 	{
 		// 获取GameManager引用
@@ -101,31 +108,122 @@ public partial class BattleSystem : Control
 		_drawPileButton.Pressed += OnDrawPilePressed;
 		_discardPileButton.Pressed += OnDiscardPilePressed;
 		
+		// 初始化音效
+		InitializeSounds();
+		
 		// 初始化战斗
 		InitBattle();
+	}
+	
+	// 初始化音效
+	private void InitializeSounds()
+	{
+		// 创建音效播放器
+		_cardPlaySound = new AudioStreamPlayer();
+		_cardNoEnergySound = new AudioStreamPlayer();
+		_playerHitSound = new AudioStreamPlayer();
+		_enemyHitSound = new AudioStreamPlayer();
+		_victorySound = new AudioStreamPlayer();
+		
+		// 加载音效
+		_cardPlaySound.Stream = ResourceLoader.Load<AudioStream>("res://Resources/Audio/SFX/Combat/card_play.wav");
+		_cardNoEnergySound.Stream = ResourceLoader.Load<AudioStream>("res://Resources/Audio/SFX/Combat/no_energy.wav");
+		_playerHitSound.Stream = ResourceLoader.Load<AudioStream>("res://Resources/Audio/SFX/Combat/player_hit.ogg");
+		_enemyHitSound.Stream = ResourceLoader.Load<AudioStream>("res://Resources/Audio/SFX/Combat/enemy_hit.ogg");
+		_victorySound.Stream = ResourceLoader.Load<AudioStream>("res://Resources/Audio/SFX/Combat/victory.wav");
+		
+		// 设置音量
+		_cardPlaySound.VolumeDb = -5.0f;
+		_cardNoEnergySound.VolumeDb = -5.0f;
+		_playerHitSound.VolumeDb = -5.0f;
+		_enemyHitSound.VolumeDb = -5.0f;
+		_victorySound.VolumeDb = -3.0f;
+		
+		// 添加到场景
+		AddChild(_cardPlaySound);
+		AddChild(_cardNoEnergySound);
+		AddChild(_playerHitSound);
+		AddChild(_enemyHitSound);
+		AddChild(_victorySound);
+	}
+	
+	// 播放卡牌使用音效
+	public void PlayCardSound()
+	{
+		if (_cardPlaySound != null && _cardPlaySound.Stream != null)
+		{
+			_cardPlaySound.Play();
+		}
+	}
+	
+	// 播放气力不足音效
+	public void PlayNoEnergySound()
+	{
+		if (_cardNoEnergySound != null && _cardNoEnergySound.Stream != null)
+		{
+			_cardNoEnergySound.Play();
+		}
+	}
+	
+	// 播放玩家受击音效
+	public void PlayPlayerHitSound()
+	{
+		if (_playerHitSound != null && _playerHitSound.Stream != null)
+		{
+			_playerHitSound.Play();
+		}
+	}
+	
+	// 播放敌人受击音效
+	public void PlayEnemyHitSound()
+	{
+		if (_enemyHitSound != null && _enemyHitSound.Stream != null)
+		{
+			_enemyHitSound.Play();
+		}
+	}
+	
+	// 播放胜利音效
+	public void PlayVictorySound()
+	{
+		if (_victorySound != null && _victorySound.Stream != null)
+		{
+			_victorySound.Play();
+		}
 	}
 	
 	// 初始化战斗
 	private void InitBattle()
 	{
-		// 创建玩家
-		Player = new Character
-		{
-			Name = _gameManager.PlayerData.PlayerName,
-			MaxHealth = 80,
-			Attack = 10,
-			Defense = 5
-		};
-		Player.Heal(Player.MaxHealth); // 设置初始生命值为最大生命值
+		// 初始化战斗数据
+		GameManager gameManager = GetNode<GameManager>("/root/GameManager");
 		
-		// 创建敌人
-		string enemyType = _gameManager.GetCurrentEnemyType();
-		if (string.IsNullOrEmpty(enemyType))
+		// 初始化玩家角色 - 使用PlayerCharacter而不是Character
+		if (gameManager != null && gameManager.PlayerData != null)
 		{
-			enemyType = "妖狐"; // 默认敌人
+			// 从玩家数据创建PlayerCharacter实例
+			Player = PlayerCharacter.FromPlayerData(gameManager.PlayerData);
+		}
+		else
+		{
+			// 创建默认PlayerCharacter
+			Player = new PlayerCharacter
+			{
+				Name = "修仙者",
+				Level = 1,
+				MaxHealth = 20,
+				CurrentHealth = 20,
+				Attack = 5,
+				Defense = 3,
+			};
 		}
 		
-		Enemy = CreateEnemy(enemyType);
+		// 更新玩家属性显示
+		UpdatePlayerInfo();
+		
+		// 创建敌人并显示敌人信息
+		CreateEnemy();
+		UpdateEnemyInfo();
 		
 		// 初始化战斗UI
 		UpdateUI();
@@ -144,51 +242,60 @@ public partial class BattleSystem : Control
 	}
 	
 	// 创建敌人
-	private Character CreateEnemy(string enemyType)
+	private void CreateEnemy()
 	{
-		switch (enemyType)
+		GameManager gameManager = GetNode<GameManager>("/root/GameManager");
+		
+		// 根据玩家等级计算敌人等级，确保不超过玩家等级3级
+		int playerLevel = gameManager.PlayerData.Level;
+		int maxEnemyLevel = playerLevel + 3;
+		int minEnemyLevel = Math.Max(1, playerLevel - 1);
+		int enemyLevel = GD.RandRange(minEnemyLevel, maxEnemyLevel);
+		
+		// 计算敌人属性（随着等级提高而增强）
+		float levelMultiplier = 1.0f + (enemyLevel - 1) * 0.2f; // 每级提升20%的属性
+		int enemyHealth = (int)(20 * levelMultiplier); // 基础生命值20
+		int enemyAttack = (int)(4 * levelMultiplier); // 基础攻击力4
+		int enemyDefense = (int)(2 * levelMultiplier); // 基础防御力2
+		
+		// 随机选择敌人名称
+		string[] enemyNames = { "邪修", "妖兽", "魔头", "邪灵", "山贼", "妖狐", "鬼魅", "邪道弟子" };
+		string enemyName = enemyNames[GD.RandRange(0, enemyNames.Length - 1)];
+		
+		// 根据等级添加前缀
+		string prefix = "";
+		if (enemyLevel > playerLevel + 2)
+			prefix = "强大的 ";
+		else if (enemyLevel > playerLevel)
+			prefix = "资深 ";
+		else if (enemyLevel < playerLevel)
+			prefix = "弱小的 ";
+		
+		// 创建敌人角色
+		Enemy = new Character
 		{
-			case "妖狐":
-				return new Character 
-				{ 
-					Name = "妖狐", 
-					MaxHealth = 50, 
-					Attack = 8, 
-					Defense = 3 
-				};
-			case "灵兽幼崽":
-				return new Character 
-				{ 
-					Name = "灵兽幼崽", 
-					MaxHealth = 30, 
-					Attack = 5, 
-					Defense = 2 
-				};
-			case "修炼者":
-				return new Character 
-				{ 
-					Name = "修炼者", 
-					MaxHealth = 60, 
-					Attack = 7, 
-					Defense = 5 
-				};
-			case "水灵兽":
-				return new Character 
-				{ 
-					Name = "水灵兽", 
-					MaxHealth = 70, 
-					Attack = 9, 
-					Defense = 4 
-				};
-			default:
-				return new Character 
-				{ 
-					Name = "未知敌人", 
-					MaxHealth = 40, 
-					Attack = 6, 
-					Defense = 2 
-				};
+			Name = prefix + enemyName,
+			Level = enemyLevel,
+			MaxHealth = enemyHealth,
+			CurrentHealth = enemyHealth,
+			Attack = enemyAttack,
+			Defense = enemyDefense,
+			IsPlayer = false
+		};
+		
+		// 为高等级敌人添加特殊技能
+		if (enemyLevel > playerLevel)
+		{
+			// 可以根据等级差异添加不同的状态效果
+			// 例如：高等级敌人有初始格挡或增益状态
+			if (enemyLevel >= playerLevel + 2)
+			{
+				Enemy.AddBlock(5);
+				GD.Print($"强大的敌人 {Enemy.Name} 有初始格挡！");
+			}
 		}
+		
+		GD.Print($"创建了敌人：{Enemy.Name}，等级：{enemyLevel}，生命值：{enemyHealth}");
 	}
 	
 	// 开始战斗
@@ -208,8 +315,11 @@ public partial class BattleSystem : Control
 		// 重置玩家气力值
 		_currentEnergy = _maxEnergy;
 		
-		// 抽取初始手牌
-		for (int i = 0; i < 5; i++)
+		// 计算需要抽取的卡牌数量（最多抽到5张）
+		int cardsToDrawCount = 5 - _hand.Count;
+		
+		// 抽取卡牌直到手牌达到5张
+		for (int i = 0; i < cardsToDrawCount && i < 5; i++)
 		{
 			DrawCard();
 		}
@@ -227,7 +337,7 @@ public partial class BattleSystem : Control
 		_discardPile.Clear();
 		
 		// 添加基础攻击牌
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			var strikeCard = new Card
 			{
@@ -417,22 +527,7 @@ public partial class BattleSystem : Control
 		}
 		
 		// 使用卡牌
-		UseCard(card);
-		
-		// 从手牌中移除
-		_hand.Remove(card);
-		
-		// 将卡牌移到弃牌堆
-		_discardPile.Add(card);
-		
-		// 移除卡牌UI
-		cardUI.QueueFree();
-		
-		// 消耗气力
-		_currentEnergy -= card.Cost;
-		
-		// 更新UI
-		UpdateUI();
+		UseCard(cardUI);
 		
 		// 检查战斗是否结束
 		CheckBattleEnd();
@@ -456,10 +551,46 @@ public partial class BattleSystem : Control
 	}
 	
 	// 使用卡牌
-	private void UseCard(Card card)
+	private void UseCard(CardUI cardUI)
 	{
+		Card card = cardUI.GetCardData();
+		
+		if (card == null || _currentEnergy < card.Cost)
+		{
+			GD.Print("不能使用卡牌：无效卡牌或气力不足");
+			return;
+		}
+		
+		// 扣除气力值
+		_currentEnergy -= card.Cost;
+		
+		// 播放卡牌使用音效
+		PlayCardSound();
+		
+		// 从手牌中移除
+		_hand.Remove(card);
+		cardUI.QueueFree();
+		
 		// 执行卡牌效果
 		card.Play(this, Enemy);
+		
+		// 根据卡牌类型添加适当的效果
+		if (card.Type == CardType.Attack)
+		{
+			// 获取敌人角色动画组件
+			CharacterAnimation enemyAnim = GetNode<CharacterAnimation>("EnemyCharacterArea/EnemyCharacter");
+			if (enemyAnim != null)
+			{
+				// 播放敌人受击动画
+				enemyAnim.PlayHitAnimation();
+				
+				// 播放敌人受击音效
+				PlayEnemyHitSound();
+			}
+		}
+		
+		// 将卡牌添加到弃牌堆
+		_discardPile.Add(card);
 		
 		// 更新UI
 		UpdateUI();
@@ -518,18 +649,8 @@ public partial class BattleSystem : Control
 	// 结束玩家回合
 	private void EndPlayerTurn()
 	{
-		// 将手牌全部放入弃牌堆
-		foreach (var card in _hand)
-		{
-			_discardPile.Add(card);
-		}
-		_hand.Clear();
-		
-		// 清空手牌UI
-		foreach (var child in _handContainer.GetChildren())
-		{
-			child.QueueFree();
-		}
+		// 不再处理手牌，保留所有卡牌
+		AddBattleLog("回合结束，保留手牌", false);
 		
 		// 玩家回合结束处理
 		Player.OnEndTurn();
@@ -548,38 +669,74 @@ public partial class BattleSystem : Control
 		
 		AddBattleLog($"{Enemy.Name}的回合！", true);
 		
-		// 延迟一段时间后执行敌人行动
+		// 延迟执行敌人行动
 		_timer.WaitTime = 1.0f;
-		_timer.Timeout += EnemyAction;
+		_timer.Timeout += () => EnemyAction();
 		_timer.Start();
 	}
 	
 	// 敌人行动
 	private void EnemyAction()
 	{
-		// 解除计时器事件绑定，避免多次触发
-		_timer.Timeout -= EnemyAction;
+		// 解除计时器绑定，避免多次调用
+		_timer.Timeout -= () => EnemyAction();
 		
-		// 敌人攻击玩家
-		int damage = Enemy.Attack;
-		AddBattleLog($"{Enemy.Name}使用了「普通攻击」，造成 {damage} 点伤害！");
-		Player.TakeDamage(damage);
+		// 简单AI：随机选择行动
+		Random random = new Random();
+		int action = random.Next(0, 10);
 		
-		// 更新UI
-		UpdateUI();
-		
-		// 延迟一段时间后结束敌人回合
-		_timer.WaitTime = 1.0f;
-		_timer.Timeout += EndEnemyTurn;
-		_timer.Start();
+		// 70%概率攻击，30%概率防御
+		if (action < 7)
+		{
+			// 攻击
+			int damage = Enemy.Attack;
+			
+			// 获取敌人角色动画组件
+			CharacterAnimation enemyAnim = GetNode<CharacterAnimation>("EnemyCharacterArea/EnemyCharacter");
+			if (enemyAnim != null)
+			{
+				// 播放攻击动画
+				enemyAnim.PlayAttackAnimation();
+			}
+			
+			// 延迟一下再造成伤害，配合动画效果
+			GetTree().CreateTimer(0.25f).Timeout += () =>
+			{
+				Player.TakeDamage(damage);
+				
+				// 获取玩家角色动画组件
+				CharacterAnimation playerAnim = GetNode<CharacterAnimation>("PlayerCharacterArea/PlayerCharacter");
+				if (playerAnim != null)
+				{
+					// 播放玩家受击动画
+					playerAnim.PlayHitAnimation();
+					
+					// 播放玩家受击音效
+					PlayPlayerHitSound();
+				}
+				
+				AddBattleLog($"{Enemy.Name}对你造成了{damage}点伤害！", false);
+				UpdatePlayerInfo(); // 更新玩家信息
+				
+				// 在伤害处理后延迟结束回合
+				GetTree().CreateTimer(1.0f).Timeout += () => EndEnemyTurn();
+			};
+		}
+		else
+		{
+			// 防御
+			Enemy.AddBlock(Enemy.Defense);
+			AddBattleLog($"{Enemy.Name}获得了{Enemy.Defense}点格挡。", false);
+			UpdateEnemyInfo();
+			
+			// 防御完毕后延迟结束回合
+			GetTree().CreateTimer(1.0f).Timeout += () => EndEnemyTurn();
+		}
 	}
 	
 	// 结束敌人回合
 	private void EndEnemyTurn()
 	{
-		// 解除计时器事件绑定，避免多次触发
-		_timer.Timeout -= EndEnemyTurn;
-		
 		// 检查战斗是否结束
 		if (CheckBattleEnd())
 		{
@@ -670,11 +827,46 @@ public partial class BattleSystem : Control
 		// 解除计时器事件绑定
 		_timer.Timeout -= OnBattleVictory;
 		
-		// 处理战斗胜利结果
-		_gameManager.HandleBattleResult(true);
+		// 播放胜利音效
+		PlayVictorySound();
 		
-		// 返回到游戏主场景
-		_gameManager.NavigateToScene("Game");
+		// 创建并显示胜利结算画面
+		PackedScene victoryScreenScene = GD.Load<PackedScene>("res://Scenes/Prefabs/VictoryScreen.tscn");
+		if (victoryScreenScene != null)
+		{
+			VictoryScreen victoryScreen = victoryScreenScene.Instantiate<VictoryScreen>();
+			AddChild(victoryScreen);
+			
+			// 初始化胜利画面并传递玩家角色和敌人等级
+			if (Player is PlayerCharacter playerCharacter)
+			{
+				victoryScreen.Initialize(playerCharacter, Enemy.Level);
+				
+				// 连接战斗完成信号
+				victoryScreen.BattleCompleted += () =>
+				{
+					// 处理战斗胜利结果
+					_gameManager.HandleBattleResult(true);
+					
+					// 返回到游戏主场景
+					_gameManager.NavigateToScene("Game");
+				};
+			}
+			else
+			{
+				// 如果Player不是PlayerCharacter类型，则直接完成战斗
+				GD.PrintErr("玩家角色不是PlayerCharacter类型，跳过经验值结算");
+				_gameManager.HandleBattleResult(true);
+				_gameManager.NavigateToScene("Game");
+			}
+		}
+		else
+		{
+			// 找不到胜利画面场景，直接完成战斗
+			GD.PrintErr("找不到胜利画面场景");
+			_gameManager.HandleBattleResult(true);
+			_gameManager.NavigateToScene("Game");
+		}
 	}
 	
 	// 战斗失败处理
@@ -706,5 +898,42 @@ public partial class BattleSystem : Control
 			default:
 				return "res://Resources/Images/Cards/burst.png";
 		}
+	}
+
+	// 更新玩家信息面板
+	private void UpdatePlayerInfo()
+	{
+		if (Player == null || _playerNameLabel == null) return;
+		
+		_playerNameLabel.Text = $"{Player.Name} Lv.{Player.Level}";
+		_playerHealthBar.Value = (float)Player.CurrentHealth / Player.MaxHealth * 100;
+		_playerHealthLabel.Text = $"{Player.CurrentHealth}/{Player.MaxHealth}";
+		_playerQiBar.Value = (float)Player.CurrentQi / Player.MaxQi * 100;
+		_playerQiLabel.Text = $"{Player.CurrentQi}/{Player.MaxQi}";
+	}
+	
+	// 更新敌人信息面板
+	private void UpdateEnemyInfo()
+	{
+		if (Enemy == null || _enemyNameLabel == null) return;
+		
+		_enemyNameLabel.Text = Enemy.Name;
+		_enemyLevelLabel.Text = $"Lv.{Enemy.Level}";
+		_enemyHealthBar.Value = (float)Enemy.CurrentHealth / Enemy.MaxHealth * 100;
+		_enemyHealthLabel.Text = $"{Enemy.CurrentHealth}/{Enemy.MaxHealth}";
+		_enemyQiBar.Value = (float)Enemy.CurrentQi / Enemy.MaxQi * 100;
+		_enemyQiLabel.Text = $"{Enemy.CurrentQi}/{Enemy.MaxQi}";
+	}
+
+	// 执行敌人回合
+	private void ExecuteEnemyTurn()
+	{
+		_currentState = BattleState.EnemyTurn;
+		AddBattleLog($"{Enemy.Name}的回合开始。", true);
+		
+		// 延迟执行敌人行动
+		_timer.WaitTime = 1.0f;
+		_timer.Timeout += () => EnemyAction();
+		_timer.Start();
 	}
 } 

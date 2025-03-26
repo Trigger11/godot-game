@@ -42,6 +42,9 @@ public partial class GameManager : Node
 	// 当前播放的背景音乐
 	private string _currentMusic = "";
 	
+	// 用于存储音乐循环的回调引用
+	private Action _loopMusicAction;
+	
 	// 游戏数据
 	public PlayerData PlayerData { get; private set; }
 	
@@ -542,13 +545,26 @@ public partial class GameManager : Node
 				var music = ResourceLoader.Load<AudioStream>(path);
 				if (music != null)
 				{
+					// 停止当前音乐并清除现有连接
+					_musicPlayer.Stop();
+					
+					// 创建一个新的Action引用，便于后续断开连接
+					if (_loopMusicAction != null)
+					{
+						_musicPlayer.Finished -= _loopMusicAction;
+						_loopMusicAction = null;
+					}
+					
+					// 设置新的音乐流并播放
 					_musicPlayer.Stream = music;
 					_musicPlayer.Playing = true;
 					_currentMusic = path;
 					
+					// 重新连接循环信号
 					if (loop)
 					{
-						_musicPlayer.Finished += () => _musicPlayer.Play();
+						_loopMusicAction = () => _musicPlayer.Play();
+						_musicPlayer.Finished += _loopMusicAction;
 					}
 					
 					GD.Print($"正在播放背景音乐: {path}");

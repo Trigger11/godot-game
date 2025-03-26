@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwtx2tuxf76yl"]
+[gd_scene load_steps=11 format=3 uid="uid://dwtx2tuxf76yl"]
 
 [ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_bxcmg"]
 [ext_resource type="Script" uid="uid://dvkc6ivp3yl3q" path="res://Scripts/BattleSystem.cs" id="1_tgpk5"]
+[ext_resource type="PackedScene" path="res://Scenes/Prefabs/PlayerCharacterPrefab.tscn" id="2_cw2ku"]
+[ext_resource type="PackedScene" path="res://Scenes/Prefabs/EnemyCharacterPrefab.tscn" id="3_gu1qj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
 bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
@@ -28,6 +30,27 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_empty"]
+bg_color = Color(0.2, 0.2, 0.2, 0.5)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health"]
+bg_color = Color(0.8, 0.2, 0.2, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qi"]
+bg_color = Color(0.2, 0.4, 0.8, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 bg_color = Color(0.117647, 0.129412, 0.184314, 0.784314)
@@ -57,7 +80,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0705882, 0.0784314, 0.109804, 1)
+color = Color(0.211765, 0.270588, 0.309804, 1)
 
 [node name="BackgroundTexture" type="TextureRect" parent="."]
 layout_mode = 1
@@ -109,9 +132,9 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -537.0
+offset_left = -399.0
 offset_top = 10.0
-offset_right = -21.0
+offset_right = -43.0
 offset_bottom = 150.0
 grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
@@ -169,6 +192,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health")
 value = 80.0
 show_percentage = false
 
@@ -194,6 +219,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qi")
 value = 50.0
 show_percentage = false
 
@@ -209,10 +236,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 170.0
-offset_right = -20.0
-offset_bottom = 4.0
+offset_left = 371.0
+offset_top = 11.0
+offset_right = -427.0
+offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
@@ -238,6 +265,55 @@ bbcode_enabled = true
 text = "妖狐向你袭来！"
 scroll_following = true
 
+[node name="PlayerCharacterArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 90.0
+offset_top = -159.0
+offset_right = 290.0
+offset_bottom = 141.0
+grow_vertical = 2
+
+[node name="PlayerCharacter" parent="PlayerCharacterArea" instance=ExtResource("2_cw2ku")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -150.0
+offset_right = 100.0
+offset_bottom = 150.0
+
+[node name="EnemyCharacterArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -159.0
+offset_right = -90.0
+offset_bottom = 141.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="EnemyCharacter" parent="EnemyCharacterArea" instance=ExtResource("3_gu1qj")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -150.0
+offset_right = 100.0
+offset_bottom = 150.0
+
 [node name="PlayerInfo" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 0
@@ -251,6 +327,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = 19.0
+offset_right = 3.0
+offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
@@ -294,6 +374,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health")
 value = 92.0
 show_percentage = false
 
@@ -319,6 +401,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qi")
 value = 66.0
 show_percentage = false
 
@@ -348,9 +432,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 50.0
+offset_left = 103.0
 offset_top = 20.0
-offset_right = -200.0
+offset_right = -147.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -372,6 +456,23 @@ grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
+[node name="EnergyProgressBar" type="ProgressBar" parent="CardArea/EnergyPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_empty")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qi")
+max_value = 3.0
+value = 3.0
+show_percentage = false
+
 [node name="EnergyLabel" type="Label" parent="CardArea/EnergyPanel"]
 layout_mode = 1
 anchors_preset = 15
@@ -379,7 +480,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
 text = "气力: 3/3"
@@ -442,3 +543,15 @@ text = "结束回合"
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="KeepHandCheckBox" type="CheckBox" parent="CardArea"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 516.0
+offset_right = 150.0
+offset_bottom = 546.0
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+text = "保留手牌"
+flat = true

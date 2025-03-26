@@ -6,7 +6,8 @@ public partial class Character : Node
 {
 	// 角色基本属性
 	public new string Name { get; set; }
-	public int Level { get; set; }
+	public int Level { get; set; } = 1; // 默认等级为1
+	public bool IsPlayer { get; set; } = false; // 标识是否为玩家角色
 	
 	// 战斗属性
 	public int MaxHealth { get; set; }
@@ -202,7 +203,7 @@ public partial class Character : Node
 		return CurrentHealth <= 0;
 	}
 	
-	// 增加格挡值
+	// 添加格挡值
 	public void AddBlock(int amount)
 	{
 		Block += amount;

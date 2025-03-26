@@ -28,14 +28,17 @@ public partial class CardUI : Control
 	{
 		// 获取UI组件引用
 		_cardPanel = GetNode<Panel>("CardPanel");
-		_nameLabel = GetNode<Label>("NameLabel");
-		_descriptionLabel = GetNode<Label>("DescriptionLabel");
-		_costLabel = GetNode<Label>("CostPanel/CostLabel");
-		_cardImage = GetNode<TextureRect>("CardImage");
+		_nameLabel = GetNode<Label>("CardPanel/NamePanel/CardName");
+		_descriptionLabel = GetNode<Label>("CardPanel/DescPanel/CardDescription");
+		_costLabel = GetNode<Label>("CardPanel/CostPanel/CostLabel");
+		_cardImage = GetNode<TextureRect>("CardPanel/CardImage");
 		
 		// 尝试获取值面板和标签（可能不存在于所有卡牌类型）
-		_valuePanel = GetNodeOrNull<Panel>("ValuePanel");
-		_valueLabel = GetNodeOrNull<Label>("ValuePanel/ValueLabel");
+		_valuePanel = GetNodeOrNull<Panel>("CardPanel/ValuePanel");
+		if (_valuePanel != null)
+		{
+			_valueLabel = GetNodeOrNull<Label>("CardPanel/ValuePanel/ValueLabel");
+		}
 		
 		// 节点准备好后，如果有卡牌数据则更新UI
 		if (_cardData != null)
@@ -231,16 +234,27 @@ public partial class CardUI : Control
 					{
 						// 发射卡牌使用信号，在BattleSystem中判断是否有足够气力
 						BattleSystem battleSystem = GetTree().Root.GetNode<BattleSystem>("Battle");
-						if (battleSystem != null && _cardData != null && battleSystem.CurrentEnergy < _cardData.Cost)
+						if (battleSystem != null && _cardData != null)
 						{
-							// 如果气力不足，直接返回原位
-							GlobalPosition = _dragStartPosition;
-							GD.Print("气力不足，卡牌返回原位");
+							if (battleSystem.CurrentEnergy < _cardData.Cost)
+							{
+								// 如果气力不足，直接返回原位
+								GlobalPosition = _dragStartPosition;
+								GD.Print("气力不足，卡牌返回原位");
+								
+								// 显示气力不足提示
+								ShowEnergyWarning(battleSystem);
+							}
+							else
+							{
+								// 气力足够，发出使用信号
+								EmitSignal(SignalName.CardPlayed, this);
+							}
 						}
 						else
 						{
-							// 气力足够，发出使用信号
-							EmitSignal(SignalName.CardPlayed, this);
+							// 没有找到BattleSystem，返回原位
+							GlobalPosition = _dragStartPosition;
 						}
 					}
 					else
@@ -259,5 +273,31 @@ public partial class CardUI : Control
 			GlobalPosition = GetGlobalMousePosition() - _mouseOffset;
 			GetViewport().SetInputAsHandled();
 		}
+	}
+	
+	// 显示气力不足警告
+	private void ShowEnergyWarning(BattleSystem battleSystem)
+	{
+		// 播放气力不足音效
+		battleSystem.PlayNoEnergySound();
+		
+		// 创建提示文本
+		Label warningLabel = new Label();
+		warningLabel.Text = "气力不足!";
+		warningLabel.HorizontalAlignment = HorizontalAlignment.Center;
+		warningLabel.VerticalAlignment = VerticalAlignment.Center;
+		warningLabel.AddThemeColorOverride("font_color", new Color(1, 0.3f, 0.3f));
+		warningLabel.AddThemeFontSizeOverride("font_size", 24);
+		
+		// 设置提示位置
+		warningLabel.GlobalPosition = battleSystem.GetNode<Control>("CardArea/EnergyPanel").GlobalPosition - new Vector2(0, 40);
+		
+		// 添加到场景中
+		battleSystem.AddChild(warningLabel);
+		
+		// 创建动画
+		Tween tween = battleSystem.CreateTween();
+		tween.TweenProperty(warningLabel, "modulate", new Color(1, 1, 1, 0), 1.0f);
+		tween.TweenCallback(Callable.From(() => warningLabel.QueueFree()));
 	}
 } 

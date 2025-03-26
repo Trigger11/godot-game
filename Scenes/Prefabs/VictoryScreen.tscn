@@ -1,0 +1,180 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxbr7h1uy2j5b"]
+
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_3cshk"]
+[ext_resource type="Script" path="res://Scripts/VictoryScreen.cs" id="1_y34gs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndpd7"]
+bg_color = Color(0.0627451, 0.0627451, 0.0941176, 0.941176)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.317647)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1o8p1"]
+bg_color = Color(0.141176, 0.203922, 0.239216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="VictoryScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y34gs")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.654902)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CenterContainer"]
+custom_minimum_size = Vector2(600, 400)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ndpd7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.603922)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 32
+text = "战斗胜利！"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="RewardsLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 24
+text = "获得奖励："
+horizontal_alignment = 1
+
+[node name="RewardsPanel" type="Panel" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_1o8p1")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ExpContainer" type="HBoxContainer" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ExpLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer/ExpContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 18
+text = "经验值："
+
+[node name="ExpValue" type="Label" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer/ExpContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 18
+text = "100"
+horizontal_alignment = 2
+
+[node name="ItemsContainer" type="HBoxContainer" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ItemsLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer/ItemsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 18
+text = "物品："
+
+[node name="ItemsList" type="VBoxContainer" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer/ItemsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ItemLabel" type="Label" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer/ItemsContainer/ItemsList"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 18
+text = "低级灵石 x1"
+horizontal_alignment = 2
+
+[node name="GainedLevel" type="Label" parent="CenterContainer/Panel/VBoxContainer/RewardsPanel/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 22
+text = "突破境界！等级提升至 2 级"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
+theme_override_fonts/font = ExtResource("1_3cshk")
+theme_override_font_sizes/font_size = 20
+text = "继续修行" 
