@@ -298,14 +298,6 @@ theme_override_fonts/font = ExtResource("2_pu7y8")
 theme_override_font_sizes/font_size = 24
 text = "战斗"
 
-[node name="DivinationButton" type="Button" parent="MainContent/ActionPanel/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
-theme_override_fonts/font = ExtResource("2_pu7y8")
-theme_override_font_sizes/font_size = 24
-text = "占卜"
-
 [node name="InventoryButton" type="Button" parent="MainContent/ActionPanel/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -313,11 +305,3 @@ theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
 theme_override_fonts/font = ExtResource("2_pu7y8")
 theme_override_font_sizes/font_size = 24
 text = "背包"
-
-[node name="ExploreButton" type="Button" parent="MainContent/ActionPanel/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.839216, 0.729412, 0.54902, 1)
-theme_override_fonts/font = ExtResource("2_pu7y8")
-theme_override_font_sizes/font_size = 24
-text = "探索"

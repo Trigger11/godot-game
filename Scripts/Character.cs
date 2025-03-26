@@ -27,6 +27,13 @@ public partial class Character : Node
 	public ElementType ElementalStrength { get; set; } = ElementType.None;
 	public ElementType ElementalWeakness { get; set; } = ElementType.None;
 	
+	// 新增卡牌战斗属性
+	public int Block { get; private set; } = 0;
+	public Dictionary<string, int> StatusEffects { get; private set; } = new Dictionary<string, int>();
+	
+	// 角色图像路径
+	public string ImagePath { get; set; } = "res://Resources/Images/Characters/default_char.png";
+	
 	// 默认构造函数
 	public Character()
 	{
@@ -153,27 +160,30 @@ public partial class Character : Node
 	// 承受伤害
 	public void TakeDamage(int damage)
 	{
-		// 如果处于防御状态，伤害减半
-		if (IsDefending)
+		// 优先扣除格挡值
+		if (Block > 0)
 		{
-			damage = (int)(damage * 0.5f);
+			if (Block >= damage)
+			{
+				Block -= damage;
+				return; // 伤害完全被格挡
+			}
+			else
+			{
+				damage -= Block;
+				Block = 0;
+			}
 		}
 		
-		CurrentHealth -= damage;
-		
-		// 确保生命值不会低于0
-		if (CurrentHealth < 0)
-			CurrentHealth = 0;
+		// 计算实际伤害
+		int actualDamage = Math.Max(1, damage - Defense);
+		CurrentHealth = Math.Max(0, CurrentHealth - actualDamage);
 	}
 	
 	// 恢复生命值
 	public void Heal(int amount)
 	{
-		CurrentHealth += amount;
-		
-		// 确保生命值不会超过最大值
-		if (CurrentHealth > MaxHealth)
-			CurrentHealth = MaxHealth;
+		CurrentHealth = Math.Min(MaxHealth, CurrentHealth + amount);
 	}
 	
 	// 恢复气力
@@ -190,6 +200,73 @@ public partial class Character : Node
 	public bool IsDead()
 	{
 		return CurrentHealth <= 0;
+	}
+	
+	// 增加格挡值
+	public void AddBlock(int amount)
+	{
+		Block += amount;
+	}
+	
+	// 添加状态效果
+	public void AddStatus(string statusName, int amount)
+	{
+		if (StatusEffects.ContainsKey(statusName))
+		{
+			StatusEffects[statusName] += amount;
+		}
+		else
+		{
+			StatusEffects[statusName] = amount;
+		}
+	}
+	
+	// 减少状态效果
+	public void ReduceStatus(string statusName, int amount)
+	{
+		if (StatusEffects.ContainsKey(statusName))
+		{
+			StatusEffects[statusName] = Math.Max(0, StatusEffects[statusName] - amount);
+			
+			// 如果状态效果降为0，移除该效果
+			if (StatusEffects[statusName] == 0)
+			{
+				StatusEffects.Remove(statusName);
+			}
+		}
+	}
+	
+	// 获取状态效果层数
+	public int GetStatusAmount(string statusName)
+	{
+		if (StatusEffects.ContainsKey(statusName))
+		{
+			return StatusEffects[statusName];
+		}
+		return 0;
+	}
+	
+	// 获取当前生命值百分比
+	public float GetHealthPercentage()
+	{
+		return (float)CurrentHealth / MaxHealth;
+	}
+	
+	// 回合结束时更新状态
+	public void OnEndTurn()
+	{
+		// 回合结束时格挡值清零
+		Block = 0;
+		
+		// 处理其他回合结束时的状态效果
+		// ...
+	}
+	
+	// 回合开始时更新状态
+	public void OnStartTurn()
+	{
+		// 处理回合开始时的状态效果
+		// ...
 	}
 }
 

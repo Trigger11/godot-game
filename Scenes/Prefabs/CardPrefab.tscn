@@ -1,0 +1,137 @@
+[gd_scene load_steps=5 format=3 uid="uid://dfjurkwd76sej"]
+
+[ext_resource type="Script" uid="uid://cpdvex7m35h1n" path="res://Scripts/CardUI.cs" id="1_jbgtw"]
+[ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="2_2y4lj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.15, 0.15, 0.2, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.2, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost"]
+bg_color = Color(0.1, 0.1, 0.15, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.65, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+
+[node name="CardUI" type="Control"]
+custom_minimum_size = Vector2(140, 200)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_jbgtw")
+
+[node name="CardPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="CardImage" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.55
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -5.0
+grow_horizontal = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 0.7
+offset_left = 5.0
+offset_right = -5.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.87, 0.71, 0.42, 1)
+theme_override_fonts/font = ExtResource("2_2y4lj")
+theme_override_font_sizes/font_size = 16
+text = "卡牌名称"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.72
+anchor_right = 1.0
+anchor_bottom = 0.9
+offset_left = 5.0
+offset_right = -5.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.87, 0.71, 0.42, 1)
+theme_override_fonts/font = ExtResource("2_2y4lj")
+theme_override_font_sizes/font_size = 12
+text = "卡牌描述文字"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CostPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.2
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cost")
+
+[node name="CostLabel" type="Label" parent="CostPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.5, 1)
+theme_override_fonts/font = ExtResource("2_2y4lj")
+theme_override_font_sizes/font_size = 18
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ValuePanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.25
+anchor_bottom = 0.2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cost")
+
+[node name="ValueLabel" type="Label" parent="ValuePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_2y4lj")
+theme_override_font_sizes/font_size = 16
+text = "6"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -16,9 +16,7 @@ public partial class GameUI : Control
 	// 按钮引用
 	private Button _cultivateButton;
 	private Button _battleButton;
-	private Button _divinationButton;
 	private Button _inventoryButton;
-	private Button _exploreButton;
 	private Button _optionsButton;
 	
 	// GameManager引用
@@ -58,17 +56,13 @@ public partial class GameUI : Control
 		// 获取按钮引用
 		_cultivateButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/CultivateButton");
 		_battleButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/BattleButton");
-		_divinationButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/DivinationButton");
 		_inventoryButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/InventoryButton");
-		_exploreButton = GetNode<Button>("MainContent/ActionPanel/HBoxContainer/ExploreButton");
 		_optionsButton = GetNode<Button>("MainContent/TopPanel/OptionsButton");
 		
 		// 连接按钮信号
 		_cultivateButton.Pressed += OnCultivateButtonPressed;
 		_battleButton.Pressed += OnBattleButtonPressed;
-		_divinationButton.Pressed += OnDivinationButtonPressed;
 		_inventoryButton.Pressed += OnInventoryButtonPressed;
-		_exploreButton.Pressed += OnExploreButtonPressed;
 		
 		// 连接选项按钮信号
 		if (_optionsButton != null)
@@ -160,19 +154,6 @@ public partial class GameUI : Control
 		}
 	}
 	
-	private void OnDivinationButtonPressed()
-	{
-		// 使用GameManager的方法切换到占卜界面
-		if (_gameManager != null)
-		{
-			_gameManager.NavigateToScene("Divination");
-		}
-		else
-		{
-			GD.PrintErr("GameManager不可用，无法切换到占卜界面");
-		}
-	}
-	
 	private void OnInventoryButtonPressed()
 	{
 		// 使用GameManager的方法切换到物品界面
@@ -184,12 +165,6 @@ public partial class GameUI : Control
 		{
 			GD.PrintErr("GameManager不可用，无法切换到物品界面");
 		}
-	}
-	
-	private void OnExploreButtonPressed()
-	{
-		// 切换到探索界面
-		_gameManager.ShowExplorationMap();
 	}
 	
 	private void OnOptionsButtonPressed()

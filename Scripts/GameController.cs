@@ -19,7 +19,6 @@ public partial class GameController : Node
     // 按钮
     private Button _cultivateButton;
     private Button _battleButton;
-    private Button _divinationButton;
     private Button _inventoryButton;
     
     public override void _Ready()
@@ -56,13 +55,11 @@ public partial class GameController : Node
         // 获取按钮引用
         _cultivateButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/CultivateButton");
         _battleButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/BattleButton");
-        _divinationButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/DivinationButton");
         _inventoryButton = GetNode<Button>("../MainContent/ActionPanel/HBoxContainer/InventoryButton");
         
         // 绑定按钮事件
         _cultivateButton.Pressed += OnCultivateButtonPressed;
         _battleButton.Pressed += OnBattleButtonPressed;
-        _divinationButton.Pressed += OnDivinationButtonPressed;
         _inventoryButton.Pressed += OnInventoryButtonPressed;
         
         // 更新UI显示
@@ -136,19 +133,6 @@ public partial class GameController : Node
         else
         {
             GD.PrintErr("GameManager不可用，无法切换到战斗界面");
-        }
-    }
-    
-    private void OnDivinationButtonPressed()
-    {
-        // 切换到占卜场景 - 使用GameManager安全方法
-        if (_gameManager != null)
-        {
-            _gameManager.NavigateToScene("Divination");
-        }
-        else
-        {
-            GD.PrintErr("GameManager不可用，无法切换到占卜界面");
         }
     }
     

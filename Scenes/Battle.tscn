@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dwtx2tuxf76yl"]
+[gd_scene load_steps=6 format=3 uid="uid://dwtx2tuxf76yl"]
 
 [ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_bxcmg"]
-[ext_resource type="Script" path="res://Scripts/BattleSystem.cs" id="1_tgpk5"]
+[ext_resource type="Script" uid="uid://dvkc6ivp3yl3q" path="res://Scripts/BattleSystem.cs" id="1_tgpk5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvfpx"]
 bg_color = Color(0.117647, 0.129412, 0.184314, 0.913725)
@@ -28,6 +28,18 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.117647, 0.129412, 0.184314, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815686, 0.65098, 0.407843, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Battle" type="Control"]
 layout_mode = 3
@@ -88,20 +100,20 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 70.0
-offset_bottom = -200.0
+offset_bottom = -287.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="EnemyPanel" type="Panel" parent="BattleField"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 20.0
-offset_right = 300.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -537.0
+offset_top = 10.0
+offset_right = -21.0
 offset_bottom = 150.0
-grow_horizontal = 2
+grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
 
 [node name="MarginContainer" type="MarginContainer" parent="BattleField/EnemyPanel"]
@@ -200,7 +212,7 @@ anchor_bottom = 1.0
 offset_left = 20.0
 offset_top = 170.0
 offset_right = -20.0
-offset_bottom = -20.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
@@ -223,65 +235,61 @@ theme_override_colors/default_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/normal_font = ExtResource("1_bxcmg")
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
-text = "妖狐向你袭来！
-
-你使用了「气爆术」，造成了15点伤害！
-妖狐使用了「妖狐爪」，造成了8点伤害！"
+text = "妖狐向你袭来！"
 scroll_following = true
 
-[node name="PlayerPanel" type="Panel" parent="."]
+[node name="PlayerInfo" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -190.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+anchors_preset = 0
+offset_left = 21.0
+offset_top = 72.0
+offset_right = 351.0
+offset_bottom = 179.0
 
-[node name="MarginContainer" type="MarginContainer" parent="PlayerPanel"]
+[node name="Panel" type="Panel" parent="PlayerInfo"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 20
+theme_override_styles/panel = SubResource("StyleBoxFlat_i38kq")
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerInfo/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 20
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerInfo/Panel/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 
-[node name="StatsContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="PlayerName" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 20
-text = "修仙者"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayerName" type="Label" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 16
-text = "生命值："
+text = "修仙者"
+horizontal_alignment = 1
 
-[node name="PlayerHealthBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 14
+text = "生命："
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -289,24 +297,24 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 value = 92.0
 show_percentage = false
 
-[node name="PlayerHealthLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer"]
+[node name="PlayerHealthLabel" type="Label" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "92/100"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 16
-text = "气力："
+theme_override_font_sizes/font_size = 14
+text = "格挡："
 
-[node name="PlayerQiBar" type="ProgressBar" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
+[node name="PlayerQiBar" type="ProgressBar" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -314,127 +322,123 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 value = 66.0
 show_percentage = false
 
-[node name="PlayerQiLabel" type="Label" parent="PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2"]
+[node name="PlayerQiLabel" type="Label" parent="PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 16
-text = "33/50"
+theme_override_font_sizes/font_size = 14
+text = "格挡: 0"
 
-[node name="HSeparator" type="HSeparator" parent="PlayerPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ActionButtons" type="HBoxContainer" parent="PlayerPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 15
-
-[node name="AttackButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 18
-text = "攻击"
-
-[node name="DefendButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 18
-text = "防御"
-
-[node name="SkillButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 18
-text = "技能"
-
-[node name="ItemButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 18
-text = "物品"
-
-[node name="EscapeButton" type="Button" parent="PlayerPanel/MarginContainer/VBoxContainer/ActionButtons"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 18
-text = "逃跑"
-
-[node name="SkillPanel" type="Panel" parent="."]
-visible = false
+[node name="CardArea" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -200.0
-offset_right = 250.0
-offset_bottom = 100.0
+anchor_bottom = 1.0
+offset_left = -593.0
+offset_top = -279.0
+offset_right = 593.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HandContainer" type="HBoxContainer" parent="CardArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = 20.0
+offset_right = -200.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_uvfpx")
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="SkillPanel"]
+[node name="EnergyPanel" type="Panel" parent="CardArea"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.989
+anchor_top = 0.445
+anchor_right = 0.989
+anchor_bottom = 0.445
+offset_left = 52.046
+offset_top = -47.035
+offset_right = 192.046
+offset_bottom = -0.0350037
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="EnergyLabel" type="Label" parent="CardArea/EnergyPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SkillPanel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="TitleLabel" type="Label" parent="SkillPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
 theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_fonts/font = ExtResource("1_bxcmg")
-theme_override_font_sizes/font_size = 24
-text = "选择技能"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="SkillPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="SkillsList" type="VBoxContainer" parent="SkillPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="BackButton" type="Button" parent="SkillPanel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.929412, 0.764706, 1)
-theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.929412, 0.764706, 1)
 theme_override_fonts/font = ExtResource("1_bxcmg")
 theme_override_font_sizes/font_size = 18
-text = "返回"
+text = "气力: 3/3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DrawPileButton" type="Button" parent="CardArea"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 42.0
+offset_top = 4.0
+offset_right = 182.0
+offset_bottom = 44.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 14
+text = "抽牌堆: 15"
+
+[node name="DiscardPileButton" type="Button" parent="CardArea"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 42.0
+offset_top = 58.0
+offset_right = 182.0
+offset_bottom = 98.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 14
+text = "弃牌堆: 0"
+
+[node name="EndTurnButton" type="Button" parent="CardArea"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = -252.0
+offset_right = 176.0
+offset_bottom = -212.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.87451, 0.709804, 0.419608, 1)
+theme_override_fonts/font = ExtResource("1_bxcmg")
+theme_override_font_sizes/font_size = 16
+text = "结束回合"
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

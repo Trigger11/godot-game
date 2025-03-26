@@ -2,610 +2,709 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class BattleSystem : Node
+public partial class BattleSystem : Control
 {
-    // 引用节点
-    private GameManager _gameManager;
-    
-    // UI元素
-    private Label _enemyName;
-    private Label _enemyLevel;
-    private ProgressBar _enemyHealthBar;
-    private Label _enemyHealthLabel;
-    private ProgressBar _enemyQiBar;
-    private Label _enemyQiLabel;
-    
-    private Label _playerName;
-    private ProgressBar _playerHealthBar;
-    private Label _playerHealthLabel;
-    private ProgressBar _playerQiBar;
-    private Label _playerQiLabel;
-    
-    private RichTextLabel _logText;
-    
-    // 战斗按钮
-    private Button _attackButton;
-    private Button _defendButton;
-    private Button _skillButton;
-    private Button _itemButton;
-    private Button _escapeButton;
-    
-    // 技能面板
-    private Panel _skillPanel;
-    private VBoxContainer _skillList;
-    
-    // 战斗数据
-    private Character _player;
-    private Character _enemy;
-    private bool _isPlayerTurn = true;
-    private bool _isBattleOver = false;
-    
-    // 技能选择
-    private bool _isSelectingSkill = false;
-    
-    // 战斗常量
-    private const int BASE_ATTACK_DAMAGE = 5;
-    private const float DEFEND_DAMAGE_REDUCTION = 0.5f;
-    private const int QI_COST_ATTACK = 5;
-    private const int QI_RECOVER_DEFEND = 10;
-    
-    public override void _Ready()
-    {
-        // 获取GameManager引用
-        _gameManager = GetNode<GameManager>("/root/GameManager");
-        
-        // 获取UI元素引用
-        // 敌人UI
-        _enemyName = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer/EnemyName");
-        _enemyLevel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer/EnemyLevel");
-        _enemyHealthBar = GetNode<ProgressBar>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer2/EnemyHealthBar");
-        _enemyHealthLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer2/EnemyHealthLabel");
-        _enemyQiBar = GetNode<ProgressBar>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer3/EnemyQiBar");
-        _enemyQiLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer3/EnemyQiLabel");
-        
-        // 玩家UI
-        _playerName = GetNode<Label>("PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/PlayerName");
-        _playerHealthBar = GetNode<ProgressBar>("PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer/PlayerHealthBar");
-        _playerHealthLabel = GetNode<Label>("PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer/PlayerHealthLabel");
-        _playerQiBar = GetNode<ProgressBar>("PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2/PlayerQiBar");
-        _playerQiLabel = GetNode<Label>("PlayerPanel/MarginContainer/VBoxContainer/StatsContainer/VBoxContainer/HBoxContainer2/PlayerQiLabel");
-        
-        // 战斗日志
-        _logText = GetNode<RichTextLabel>("BattleField/BattleLog/MarginContainer/LogText");
-        
-        // 战斗按钮
-        _attackButton = GetNode<Button>("PlayerPanel/MarginContainer/VBoxContainer/ActionButtons/AttackButton");
-        _defendButton = GetNode<Button>("PlayerPanel/MarginContainer/VBoxContainer/ActionButtons/DefendButton");
-        _skillButton = GetNode<Button>("PlayerPanel/MarginContainer/VBoxContainer/ActionButtons/SkillButton");
-        _itemButton = GetNode<Button>("PlayerPanel/MarginContainer/VBoxContainer/ActionButtons/ItemButton");
-        _escapeButton = GetNode<Button>("PlayerPanel/MarginContainer/VBoxContainer/ActionButtons/EscapeButton");
-        
-        // 技能面板
-        _skillPanel = GetNode<Panel>("SkillPanel");
-        _skillList = GetNode<VBoxContainer>("SkillPanel/MarginContainer/VBoxContainer/SkillsList");
-        
-        // 绑定按钮事件
-        _attackButton.Pressed += OnAttackButtonPressed;
-        _defendButton.Pressed += OnDefendButtonPressed;
-        _skillButton.Pressed += OnSkillButtonPressed;
-        _itemButton.Pressed += OnItemButtonPressed;
-        _escapeButton.Pressed += OnEscapeButtonPressed;
-        GetNode<Button>("SkillPanel/MarginContainer/VBoxContainer/BackButton").Pressed += OnSkillBackButtonPressed;
-        
-        // 初始化战斗
-        InitializeBattle();
-    }
-    
-    private void InitializeBattle()
-    {
-        // 获取玩家数据
-        _player = Character.FromPlayerData(_gameManager.PlayerData);
-        
-        // 创建敌人数据
-        _enemy = GenerateRandomEnemy();
-        
-        // 更新UI
-        UpdateEnemyUI();
-        UpdatePlayerUI();
-        
-        // 清空战斗日志
-        _logText.Clear();
-        AddBattleLog($"遭遇了 {_enemy.Name}！", true);
-        AddBattleLog("战斗开始！", true);
-        
-        // 隐藏技能面板
-        _skillPanel.Visible = false;
-        
-        // 设置为玩家回合
-        _isPlayerTurn = true;
-        _isBattleOver = false;
-        EnablePlayerActions(true);
-    }
-    
-    private Character GenerateRandomEnemy()
-    {
-        // 这里可以根据游戏进度生成不同的敌人
-        string[] enemyNames = { "妖狐", "山精", "恶鬼", "邪修", "毒蛇精" };
-        int randomIndex = new Random().Next(0, enemyNames.Length);
-        
-        int enemyLevel = _player.Level + new Random().Next(-1, 2); // 敌人等级随机在玩家等级-1到+1之间
-        if (enemyLevel < 1) enemyLevel = 1;
-        
-        // 根据等级计算属性
-        int baseStats = 5 + enemyLevel * 2;
-        
-        Character enemy = new Character();
-        enemy.Name = enemyNames[randomIndex];
-        enemy.Level = enemyLevel;
-        enemy.MaxHealth = baseStats * 10;
-        enemy.CurrentHealth = enemy.MaxHealth;
-        enemy.MaxQi = baseStats * 5;
-        enemy.CurrentQi = enemy.MaxQi;
-        enemy.Attack = baseStats;
-        enemy.Defense = baseStats / 2;
-        enemy.Spirit = baseStats / 2;
-        
-        return enemy;
-    }
-    
-    private void UpdateEnemyUI()
-    {
-        _enemyName.Text = _enemy.Name;
-        _enemyLevel.Text = $"等级：{_enemy.Level}";
-        
-        _enemyHealthBar.MaxValue = _enemy.MaxHealth;
-        _enemyHealthBar.Value = _enemy.CurrentHealth;
-        _enemyHealthLabel.Text = $"{_enemy.CurrentHealth}/{_enemy.MaxHealth}";
-        
-        _enemyQiBar.MaxValue = _enemy.MaxQi;
-        _enemyQiBar.Value = _enemy.CurrentQi;
-        _enemyQiLabel.Text = $"{_enemy.CurrentQi}/{_enemy.MaxQi}";
-    }
-    
-    private void UpdatePlayerUI()
-    {
-        _playerName.Text = "修仙者";
-        
-        _playerHealthBar.MaxValue = _player.MaxHealth;
-        _playerHealthBar.Value = _player.CurrentHealth;
-        _playerHealthLabel.Text = $"{_player.CurrentHealth}/{_player.MaxHealth}";
-        
-        _playerQiBar.MaxValue = _player.MaxQi;
-        _playerQiBar.Value = _player.CurrentQi;
-        _playerQiLabel.Text = $"{_player.CurrentQi}/{_player.MaxQi}";
-    }
-    
-    private void AddBattleLog(string message, bool important = false)
-    {
-        if (important)
-        {
-            _logText.AppendText($"[color=#E5B96A]{message}[/color]\n\n");
-        }
-        else
-        {
-            _logText.AppendText($"{message}\n\n");
-        }
-    }
-    
-    private void EnablePlayerActions(bool enable)
-    {
-        _attackButton.Disabled = !enable || _player.CurrentQi < QI_COST_ATTACK;
-        _defendButton.Disabled = !enable;
-        _skillButton.Disabled = !enable || _player.Skills.Count == 0;
-        _itemButton.Disabled = !enable; // 这里可以根据是否有可用物品来设置
-        _escapeButton.Disabled = !enable;
-    }
-    
-    private void OnAttackButtonPressed()
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 使用气力
-        if (_player.CurrentQi < QI_COST_ATTACK)
-        {
-            AddBattleLog("气力不足，无法攻击！");
-            return;
-        }
-        _player.CurrentQi -= QI_COST_ATTACK;
-        
-        // 计算伤害
-        int damage = CalculateDamage(_player, _enemy, BASE_ATTACK_DAMAGE);
-        
-        // 造成伤害
-        _enemy.TakeDamage(damage);
-        
-        // 更新UI
-        UpdatePlayerUI();
-        UpdateEnemyUI();
-        
-        // 添加战斗日志
-        AddBattleLog($"你对 {_enemy.Name} 发起攻击，造成了 {damage} 点伤害！");
-        
-        // 检查战斗是否结束
-        if (_enemy.CurrentHealth <= 0)
-        {
-            EndBattle(true);
-            return;
-        }
-        
-        // 切换到敌人回合
-        _isPlayerTurn = false;
-        EnablePlayerActions(false);
-        
-        // 敌人AI在短暂延时后行动
-        GetTree().CreateTimer(1.0f).Timeout += EnemyTurn;
-    }
-    
-    private void OnDefendButtonPressed()
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 防御可以恢复一些气力
-        _player.RecoverQi(QI_RECOVER_DEFEND);
-        
-        // 设置防御状态
-        _player.IsDefending = true;
-        
-        // 更新UI
-        UpdatePlayerUI();
-        
-        // 添加战斗日志
-        AddBattleLog("你摆出防御姿态，恢复了一些气力。下回合受到的伤害将减少。");
-        
-        // 切换到敌人回合
-        _isPlayerTurn = false;
-        EnablePlayerActions(false);
-        
-        // 敌人AI在短暂延时后行动
-        GetTree().CreateTimer(1.0f).Timeout += EnemyTurn;
-    }
-    
-    private void OnSkillButtonPressed()
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 显示技能选择面板
-        ShowSkillPanel();
-    }
-    
-    private void ShowSkillPanel()
-    {
-        _isSelectingSkill = true;
-        
-        // 清空技能列表
-        foreach (Node child in _skillList.GetChildren())
-        {
-            child.QueueFree();
-        }
-        
-        // 填充技能列表
-        foreach (var skill in _player.Skills)
-        {
-            Button skillButton = new Button();
-            skillButton.Text = $"{skill.Name} (气力: {skill.QiCost})";
-            skillButton.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-            skillButton.Disabled = _player.CurrentQi < skill.QiCost;
-            
-            // 样式设置
-            skillButton.AddThemeColorOverride("font_color", new Color(0.84f, 0.76f, 0.61f));
-            skillButton.AddThemeColorOverride("font_hover_color", new Color(0.99f, 0.92f, 0.80f));
-            skillButton.AddThemeFontOverride("font", ResourceLoader.Load<Font>("res://Resources/Fonts/XiaoKeFont.ttf"));
-            skillButton.AddThemeFontSizeOverride("font_size", 18);
-            
-            // 添加事件
-            skillButton.Pressed += () => UseSkill(skill);
-            
-            _skillList.AddChild(skillButton);
-        }
-        
-        // 如果没有技能，添加提示
-        if (_player.Skills.Count == 0)
-        {
-            Label noSkillLabel = new Label();
-            noSkillLabel.Text = "你还没有学会任何战斗技能！";
-            noSkillLabel.AddThemeColorOverride("font_color", new Color(0.84f, 0.76f, 0.61f));
-            noSkillLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            _skillList.AddChild(noSkillLabel);
-        }
-        
-        // 显示技能面板
-        _skillPanel.Visible = true;
-    }
-    
-    private void OnSkillBackButtonPressed()
-    {
-        // 隐藏技能面板
-        _skillPanel.Visible = false;
-        _isSelectingSkill = false;
-    }
-    
-    private void UseSkill(Technique skill)
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 隐藏技能面板
-        _skillPanel.Visible = false;
-        _isSelectingSkill = false;
-        
-        // 检查气力
-        if (_player.CurrentQi < skill.QiCost)
-        {
-            AddBattleLog($"气力不足，无法使用 {skill.Name}！");
-            return;
-        }
-        
-        // 使用技能
-        int damage = _player.UseSkill(skill, _enemy);
-        
-        // 元素相克显示
-        string elementalEffectText = "";
-        if (skill.ElementType != ElementType.None)
-        {
-            if (_enemy.ElementalWeakness == skill.ElementType)
-            {
-                elementalEffectText = $"[color=#FF5733]元素克制！{GetElementName(skill.ElementType)}属性克制{_enemy.Name}的{GetElementName(_enemy.ElementalStrength)}属性！伤害提升！[/color]";
-                AddBattleLog(elementalEffectText, true);
-            }
-            else if (_enemy.ElementalStrength == skill.ElementType)
-            {
-                elementalEffectText = $"[color=#33FFC7]{_enemy.Name}的{GetElementName(_enemy.ElementalStrength)}属性抵抗了你的{GetElementName(skill.ElementType)}攻击！伤害减少！[/color]";
-                AddBattleLog(elementalEffectText, true);
-            }
-        }
-        
-        // 更新UI
-        UpdatePlayerUI();
-        UpdateEnemyUI();
-        
-        // 添加战斗日志
-        AddBattleLog($"你使用了「{skill.Name}」，对 {_enemy.Name} 造成了 {damage} 点伤害！");
-        
-        // 检查战斗是否结束
-        if (_enemy.IsDead())
-        {
-            EndBattle(true);
-            return;
-        }
-        
-        // 切换到敌人回合
-        _isPlayerTurn = false;
-        EnablePlayerActions(false);
-        
-        // 敌人AI在短暂延时后行动
-        GetTree().CreateTimer(1.0f).Timeout += EnemyTurn;
-    }
-    
-    // 获取元素名称
-    private string GetElementName(ElementType elementType)
-    {
-        switch (elementType)
-        {
-            case ElementType.Fire:
-                return "火";
-            case ElementType.Water:
-                return "水";
-            case ElementType.Earth:
-                return "土";
-            case ElementType.Wind:
-                return "风";
-            case ElementType.Metal:
-                return "金";
-            default:
-                return "无";
-        }
-    }
-    
-    private void OnItemButtonPressed()
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 简单实现：使用药品恢复生命值
-        _player.Heal(20);
-        UpdatePlayerUI();
-        
-        AddBattleLog("使用了一个药品，恢复了20点生命值！");
-        
-        // 切换到敌人回合
-        _isPlayerTurn = false;
-        EnablePlayerActions(false);
-        
-        // 敌人AI在短暂延时后行动
-        GetTree().CreateTimer(1.0f).Timeout += EnemyTurn;
-    }
-    
-    private void OnEscapeButtonPressed()
-    {
-        if (!_isPlayerTurn || _isBattleOver) return;
-        
-        // 逃跑有50%的成功率
-        if (new Random().NextDouble() < 0.5)
-        {
-            AddBattleLog("成功逃离战斗！", true);
-            GetTree().CreateTimer(1.5f).Timeout += () => GetTree().ChangeSceneToFile("res://Scenes/Game.tscn");
-        }
-        else
-        {
-            AddBattleLog("逃跑失败！");
-            
-            // 切换到敌人回合
-            _isPlayerTurn = false;
-            EnablePlayerActions(false);
-            
-            // 敌人AI在短暂延时后行动
-            GetTree().CreateTimer(1.0f).Timeout += EnemyTurn;
-        }
-    }
-    
-    private void EnemyTurn()
-    {
-        if (_isBattleOver) return;
-        
-        // 增强敌人AI逻辑
-        // 1. 低血量时有几率使用治疗
-        // 2. 根据气力情况决定是普通攻击还是防御
-        // 3. 随机使用特殊攻击
-        
-        Random random = new Random();
-        
-        // 如果敌人血量低于30%，有50%几率选择防御和恢复
-        if (_enemy.CurrentHealth < _enemy.MaxHealth * 0.3 && random.NextDouble() < 0.5)
-        {
-            // 防御，恢复气力和少量生命
-            _enemy.RecoverQi(QI_RECOVER_DEFEND);
-            _enemy.Heal(5);
-            _enemy.IsDefending = true;
-            
-            // 更新UI
-            UpdateEnemyUI();
-            
-            // 添加战斗日志
-            AddBattleLog($"{_enemy.Name} 采取防御姿态，恢复了一些气力和生命值。");
-        }
-        // 正常气力状态下有70%几率选择攻击
-        else if (_enemy.CurrentQi >= QI_COST_ATTACK && random.NextDouble() < 0.7)
-        {
-            // 攻击
-            _enemy.CurrentQi -= QI_COST_ATTACK;
-            
-            // 计算伤害
-            int damage = CalculateDamage(_enemy, _player, BASE_ATTACK_DAMAGE);
-            
-            // 如果玩家在防御状态，伤害减少
-            if (_player.IsDefending)
-            {
-                damage = (int)(damage * DEFEND_DAMAGE_REDUCTION);
-                AddBattleLog("你的防御减少了伤害！");
-            }
-            
-            // 造成伤害
-            _player.TakeDamage(damage);
-            
-            // 更新UI
-            UpdateEnemyUI();
-            UpdatePlayerUI();
-            
-            // 添加战斗日志
-            AddBattleLog($"{_enemy.Name} 对你发起攻击，造成了 {damage} 点伤害！");
-            
-            // 检查战斗是否结束
-            if (_player.IsDead())
-            {
-                EndBattle(false);
-                return;
-            }
-        }
-        // 气力不足或者随机选择防御
-        else
-        {
-            // 防御，恢复气力
-            _enemy.RecoverQi(QI_RECOVER_DEFEND);
-            _enemy.IsDefending = true;
-            
-            // 更新UI
-            UpdateEnemyUI();
-            
-            // 添加战斗日志
-            AddBattleLog($"{_enemy.Name} 正在蓄力，恢复了一些气力。");
-        }
-        
-        // 重置玩家防御状态
-        _player.IsDefending = false;
-        
-        // 切换到玩家回合
-        _isPlayerTurn = true;
-        EnablePlayerActions(true);
-    }
-    
-    private int CalculateDamage(Character attacker, Character defender, int baseDamage)
-    {
-        // 基础伤害 + 攻击者攻击力 - 防御者防御力
-        int damage = baseDamage + attacker.Attack - defender.Defense / 2;
-        
-        // 随机浮动20%
-        float randomFactor = (float)new Random().NextDouble() * 0.4f + 0.8f; // 0.8-1.2范围的随机数
-        damage = (int)(damage * randomFactor);
-        
-        // 确保最低伤害为1
-        if (damage < 1) damage = 1;
-        
-        return damage;
-    }
-    
-    private void EndBattle(bool victory)
-    {
-        _isBattleOver = true;
-        EnablePlayerActions(false);
-        
-        if (victory)
-        {
-            // 玩家胜利
-            AddBattleLog($"战斗胜利！击败了 {_enemy.Name}！", true);
-            
-            // 计算奖励
-            int expReward = _enemy.Level * 20 + new Random().Next(5, 15);
-            
-            // 添加经验
-            _gameManager.PlayerData.AddExperience(expReward);
-            
-            AddBattleLog($"获得了 {expReward} 点经验值！");
-            
-            // 属性点奖励
-            Random random = new Random();
-            if (random.NextDouble() < 0.3) // 30%几率获得额外属性点
-            {
-                int statPoints = random.Next(1, 3);
-                // 随机选择加强的属性
-                string[] stats = { "气力", "体魄", "神识" };
-                string statName = stats[random.Next(0, stats.Length)];
-                
-                _gameManager.PlayerData.AddAttributePoints(statName, statPoints);
-                AddBattleLog($"你的{statName}提升了{statPoints}点！");
-            }
-            
-            // 掉落物品
-            int itemChance = random.Next(0, 100);
-            if (itemChance < 40) // 40%几率掉落物品
-            {
-                string[] items = { "灵草", "培元丹", "妖兽内丹", "破损的护符", "修士手札", "灵石" };
-                string droppedItem = items[random.Next(0, items.Length)];
-                
-                // 这里应该添加物品到玩家背包
-                AddBattleLog($"获得了物品: {droppedItem}！");
-            }
-            
-            // 极低几率学习新技能
-            if (random.NextDouble() < 0.05) // 5%几率获得新技能
-            {
-                string[] techniqueNames = { "飞剑术", "五行遁法", "元磁神光", "碧海潮生诀", "玄冰真气" };
-                string newTechnique = techniqueNames[random.Next(0, techniqueNames.Length)];
-                
-                AddBattleLog($"你从战斗中领悟了新技能：{newTechnique}！", true);
-                // 这里应该添加技能到玩家的已学技能列表
-            }
-            
-            // 战斗后修炼效率提升
-            _gameManager.PlayerData.SetTemporaryBonus("修炼效率", 0.2f, 600); // 提升20%的修炼效率，持续10分钟
-            AddBattleLog("战斗激发了你的潜能，短时间内修炼效率提升20%！", true);
-            
-            // 2秒后返回主界面
-            GetTree().CreateTimer(2.0f).Timeout += () => GetTree().ChangeSceneToFile("res://Scenes/Game.tscn");
-        }
-        else
-        {
-            // 玩家失败
-            AddBattleLog("你被击败了...", true);
-            AddBattleLog("修为受损，损失了一些经验值。", true);
-            
-            // 失败惩罚 - 损失10%的经验
-            int expLoss = (int)(_gameManager.PlayerData.Experience * 0.1f);
-            if (expLoss > 0)
-            {
-                _gameManager.PlayerData.AddExperience(-expLoss);
-                AddBattleLog($"损失了 {expLoss} 点经验值。");
-            }
-            
-            // 2秒后返回主界面
-            GetTree().CreateTimer(2.0f).Timeout += () => GetTree().ChangeSceneToFile("res://Scenes/Game.tscn");
-        }
-    }
+	// 游戏管理器引用
+	private GameManager _gameManager;
+	
+	// 战斗状态枚举
+	private enum BattleState
+	{
+		Start,
+		PlayerTurn,
+		EnemyTurn,
+		Victory,
+		Defeat
+	}
+	
+	// 战斗状态
+	private BattleState _currentState = BattleState.Start;
+	
+	// 战斗角色
+	public Character Player { get; private set; }
+	public Character Enemy { get; private set; }
+	
+	// 卡牌相关
+	private List<Card> _drawPile = new List<Card>();    // 抽牌堆
+	private List<Card> _hand = new List<Card>();        // 手牌
+	private List<Card> _discardPile = new List<Card>(); // 弃牌堆
+	private List<Card> _exhaustPile = new List<Card>(); // 消耗堆
+	
+	// 当前回合气力值
+	private int _currentEnergy = 0;
+	private int _maxEnergy = 3;
+	
+	// 公开当前气力值属性供其他类访问
+	public int CurrentEnergy => _currentEnergy;
+	public int MaxEnergy => _maxEnergy;
+	
+	// UI元素
+	private Label _enemyNameLabel;
+	private Label _enemyLevelLabel;
+	private ProgressBar _enemyHealthBar;
+	private Label _enemyHealthLabel;
+	private ProgressBar _enemyQiBar;
+	private Label _enemyQiLabel;
+	
+	private Label _playerNameLabel;
+	private ProgressBar _playerHealthBar;
+	private Label _playerHealthLabel;
+	private ProgressBar _playerQiBar;
+	private Label _playerQiLabel;
+	
+	private RichTextLabel _logText;
+	private Button _endTurnButton;
+	
+	// 卡牌区域和能量显示
+	private HBoxContainer _handContainer;
+	private Label _energyLabel;
+	private Button _drawPileButton;
+	private Button _discardPileButton;
+	
+	// 定时器
+	private Timer _timer;
+	
+	public override void _Ready()
+	{
+		// 获取GameManager引用
+		_gameManager = GameManager.Instance;
+		
+		// 初始化UI引用
+		_enemyNameLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer/EnemyName");
+		_enemyLevelLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer/EnemyLevel");
+		_enemyHealthBar = GetNode<ProgressBar>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer2/EnemyHealthBar");
+		_enemyHealthLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer2/EnemyHealthLabel");
+		_enemyQiBar = GetNode<ProgressBar>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer3/EnemyQiBar");
+		_enemyQiLabel = GetNode<Label>("BattleField/EnemyPanel/MarginContainer/VBoxContainer/HBoxContainer3/EnemyQiLabel");
+		
+		_playerNameLabel = GetNode<Label>("PlayerInfo/Panel/MarginContainer/VBoxContainer/PlayerName");
+		_playerHealthBar = GetNode<ProgressBar>("PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer/PlayerHealthBar");
+		_playerHealthLabel = GetNode<Label>("PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer/PlayerHealthLabel");
+		_playerQiBar = GetNode<ProgressBar>("PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer2/PlayerQiBar");
+		_playerQiLabel = GetNode<Label>("PlayerInfo/Panel/MarginContainer/VBoxContainer/HBoxContainer2/PlayerQiLabel");
+		
+		_logText = GetNode<RichTextLabel>("BattleField/BattleLog/MarginContainer/LogText");
+		
+		// 获取卡牌区域引用
+		_handContainer = GetNode<HBoxContainer>("CardArea/HandContainer");
+		_energyLabel = GetNode<Label>("CardArea/EnergyPanel/EnergyLabel");
+		_drawPileButton = GetNode<Button>("CardArea/DrawPileButton");
+		_discardPileButton = GetNode<Button>("CardArea/DiscardPileButton");
+		
+		// 获取结束回合按钮引用
+		_endTurnButton = GetNode<Button>("CardArea/EndTurnButton");
+		
+		_timer = GetNode<Timer>("Timer");
+		
+		// 绑定按钮事件
+		_endTurnButton.Pressed += OnEndTurnPressed;
+		_drawPileButton.Pressed += OnDrawPilePressed;
+		_discardPileButton.Pressed += OnDiscardPilePressed;
+		
+		// 初始化战斗
+		InitBattle();
+	}
+	
+	// 初始化战斗
+	private void InitBattle()
+	{
+		// 创建玩家
+		Player = new Character
+		{
+			Name = _gameManager.PlayerData.PlayerName,
+			MaxHealth = 80,
+			Attack = 10,
+			Defense = 5
+		};
+		Player.Heal(Player.MaxHealth); // 设置初始生命值为最大生命值
+		
+		// 创建敌人
+		string enemyType = _gameManager.GetCurrentEnemyType();
+		if (string.IsNullOrEmpty(enemyType))
+		{
+			enemyType = "妖狐"; // 默认敌人
+		}
+		
+		Enemy = CreateEnemy(enemyType);
+		
+		// 初始化战斗UI
+		UpdateUI();
+		
+		// 清空战斗日志
+		_logText.Text = "";
+		
+		// 初始化卡组
+		InitializeDeck();
+		
+		// 洗牌
+		ShuffleDeck();
+		
+		// 开始战斗
+		StartBattle();
+	}
+	
+	// 创建敌人
+	private Character CreateEnemy(string enemyType)
+	{
+		switch (enemyType)
+		{
+			case "妖狐":
+				return new Character 
+				{ 
+					Name = "妖狐", 
+					MaxHealth = 50, 
+					Attack = 8, 
+					Defense = 3 
+				};
+			case "灵兽幼崽":
+				return new Character 
+				{ 
+					Name = "灵兽幼崽", 
+					MaxHealth = 30, 
+					Attack = 5, 
+					Defense = 2 
+				};
+			case "修炼者":
+				return new Character 
+				{ 
+					Name = "修炼者", 
+					MaxHealth = 60, 
+					Attack = 7, 
+					Defense = 5 
+				};
+			case "水灵兽":
+				return new Character 
+				{ 
+					Name = "水灵兽", 
+					MaxHealth = 70, 
+					Attack = 9, 
+					Defense = 4 
+				};
+			default:
+				return new Character 
+				{ 
+					Name = "未知敌人", 
+					MaxHealth = 40, 
+					Attack = 6, 
+					Defense = 2 
+				};
+		}
+	}
+	
+	// 开始战斗
+	private void StartBattle()
+	{
+		AddBattleLog($"{Enemy.Name}向你袭来！", true);
+		
+		// 开始玩家回合
+		StartPlayerTurn();
+	}
+	
+	// 开始玩家回合
+	private void StartPlayerTurn()
+	{
+		_currentState = BattleState.PlayerTurn;
+		
+		// 重置玩家气力值
+		_currentEnergy = _maxEnergy;
+		
+		// 抽取初始手牌
+		for (int i = 0; i < 5; i++)
+		{
+			DrawCard();
+		}
+		
+		// 更新UI
+		UpdateUI();
+		AddBattleLog("你的回合！", true);
+	}
+	
+	// 初始化卡组
+	private void InitializeDeck()
+	{
+		_drawPile.Clear();
+		_hand.Clear();
+		_discardPile.Clear();
+		
+		// 添加基础攻击牌
+		for (int i = 0; i < 5; i++)
+		{
+			var strikeCard = new Card
+			{
+				Name = "打击",
+				Description = "造成6点伤害",
+				Cost = 1,
+				Type = CardType.Attack,
+				ImagePath = "res://Resources/Images/Cards/strike.png",
+				Effects = new List<CardEffect> { new DamageEffect { DamageAmount = 6 } }
+			};
+			_drawPile.Add(strikeCard);
+		}
+		
+		// 添加基础防御牌
+		for (int i = 0; i < 5; i++)
+		{
+			var defendCard = new Card
+			{
+				Name = "防御",
+				Description = "获得5点格挡",
+				Cost = 1,
+				Type = CardType.Defense,
+				ImagePath = "res://Resources/Images/Cards/defend.png",
+				Effects = new List<CardEffect> { new BlockEffect { BlockAmount = 5 } }
+			};
+			_drawPile.Add(defendCard);
+		}
+		
+		// 添加特殊技能牌
+		var burstCard = new Card
+		{
+			Name = "气爆术",
+			Description = "造成10点伤害",
+			Cost = 2,
+			Type = CardType.Attack,
+			ImagePath = "res://Resources/Images/Cards/burst.png",
+			Effects = new List<CardEffect> { new DamageEffect { DamageAmount = 10 } }
+		};
+		_drawPile.Add(burstCard);
+		
+		var qiFlowCard = new Card
+		{
+			Name = "五雷天心诀",
+			Description = "抽2张牌",
+			Cost = 1,
+			Type = CardType.Skill,
+			ImagePath = "res://Resources/Images/Cards/qiflow.png",
+			Effects = new List<CardEffect> { new DrawCardEffect { CardCount = 2 } }
+		};
+		_drawPile.Add(qiFlowCard);
+		
+		var concentrateCard = new Card
+		{
+			Name = "凝神",
+			Description = "获得2点气力",
+			Cost = 0,
+			Type = CardType.Skill,
+			ImagePath = "res://Resources/Images/Cards/concentrate.png",
+			Effects = new List<CardEffect> { new GainEnergyEffect { EnergyAmount = 2 } }
+		};
+		_drawPile.Add(concentrateCard);
+		
+		// 确保所有卡牌都有图像
+		foreach (var card in _drawPile)
+		{
+			// 如果路径为空或文件不存在，设置默认图像
+			if (string.IsNullOrEmpty(card.ImagePath) || !ResourceLoader.Exists(card.ImagePath))
+			{
+				// 设置默认图像路径，根据卡牌类型
+				switch (card.Type)
+				{
+					case CardType.Attack:
+						card.ImagePath = "res://Resources/Images/Cards/strike.png";
+						break;
+					case CardType.Defense:
+						card.ImagePath = "res://Resources/Images/Cards/defend.png";
+						break;
+					case CardType.Skill:
+						card.ImagePath = "res://Resources/Images/Cards/qiflow.png";
+						break;
+					case CardType.Power:
+						card.ImagePath = "res://Resources/Images/Cards/concentrate.png";
+						break;
+					default:
+						card.ImagePath = "res://Resources/Images/Cards/burst.png";
+						break;
+				}
+			}
+		}
+	}
+	
+	// 洗牌
+	private void ShuffleDeck()
+	{
+		// 使用Fisher-Yates洗牌算法
+		Random random = new Random();
+		int n = _drawPile.Count;
+		
+		while (n > 1)
+		{
+			n--;
+			int k = random.Next(n + 1);
+			Card temp = _drawPile[k];
+			_drawPile[k] = _drawPile[n];
+			_drawPile[n] = temp;
+		}
+	}
+	
+	// 抽牌
+	public void DrawCard()
+	{
+		// 如果抽牌堆为空，将弃牌堆洗牌后放入抽牌堆
+		if (_drawPile.Count == 0 && _discardPile.Count > 0)
+		{
+			_drawPile.AddRange(_discardPile);
+			_discardPile.Clear();
+			ShuffleDeck();
+			AddBattleLog("弃牌堆已洗入抽牌堆。", false);
+		}
+		
+		// 如果抽牌堆还有牌，抽一张到手上
+		if (_drawPile.Count > 0)
+		{
+			Card card = _drawPile[0];
+			_drawPile.RemoveAt(0);
+			_hand.Add(card);
+			
+			// 创建并添加卡牌UI
+			CreateCardUI(card);
+			
+			UpdateUI();
+		}
+	}
+	
+	// 使用预制体创建卡牌UI
+	private void CreateCardUI(Card card)
+	{
+		// 如果手牌已满，不再创建新卡牌
+		if (_handContainer.GetChildCount() >= 8)
+		{
+			AddBattleLog("手牌已满！", false);
+			return;
+		}
+		
+		GD.Print($"创建卡牌UI: {card.Name}");
+		
+		// 从预制体加载卡牌场景
+		PackedScene cardScene = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/CardPrefab.tscn");
+		if (cardScene == null)
+		{
+			GD.PrintErr("无法加载卡牌预制体");
+			return;
+		}
+		
+		// 实例化卡牌场景
+		CardUI cardUI = cardScene.Instantiate<CardUI>();
+		if (cardUI == null)
+		{
+			GD.PrintErr("无法实例化卡牌预制体");
+			return;
+		}
+		
+		// 设置卡牌数据
+		cardUI.SetCardData(card);
+		
+		// 连接卡牌使用信号
+		cardUI.CardPlayed += OnCardPlayed;
+		
+		// 添加到手牌区域
+		_handContainer.AddChild(cardUI);
+		GD.Print($"卡牌添加到手牌区域，当前手牌数量: {_handContainer.GetChildCount()}");
+	}
+	
+	// 卡牌使用回调
+	private void OnCardPlayed(CardUI cardUI)
+	{
+		// 获取卡牌数据
+		Card card = cardUI.GetCardData();
+		if (card == null) return;
+		
+		// 检查气力是否足够
+		if (card.Cost > _currentEnergy)
+		{
+			AddBattleLog($"气力不足，无法使用「{card.Name}」！", false);
+			// 返回原位（卡牌UI内部会处理）
+			return;
+		}
+		
+		// 使用卡牌
+		UseCard(card);
+		
+		// 从手牌中移除
+		_hand.Remove(card);
+		
+		// 将卡牌移到弃牌堆
+		_discardPile.Add(card);
+		
+		// 移除卡牌UI
+		cardUI.QueueFree();
+		
+		// 消耗气力
+		_currentEnergy -= card.Cost;
+		
+		// 更新UI
+		UpdateUI();
+		
+		// 检查战斗是否结束
+		CheckBattleEnd();
+	}
+	
+	// 重新排列卡牌
+	private void RearrangeCards()
+	{
+		// 清空手牌区域并重新添加所有卡牌
+		var cards = new List<Node>();
+		foreach (var child in _handContainer.GetChildren())
+		{
+			cards.Add(child);
+			_handContainer.RemoveChild(child);
+		}
+		
+		foreach (var card in cards)
+		{
+			_handContainer.AddChild(card);
+		}
+	}
+	
+	// 使用卡牌
+	private void UseCard(Card card)
+	{
+		// 执行卡牌效果
+		card.Play(this, Enemy);
+		
+		// 更新UI
+		UpdateUI();
+	}
+	
+	// 添加气力
+	public void AddEnergy(int amount)
+	{
+		_currentEnergy += amount;
+		UpdateUI();
+	}
+	
+	// 更新UI
+	private void UpdateUI()
+	{
+		// 更新敌人信息
+		_enemyNameLabel.Text = Enemy.Name;
+		_enemyHealthBar.Value = Enemy.GetHealthPercentage() * 100;
+		_enemyHealthLabel.Text = $"{Enemy.CurrentHealth}/{Enemy.MaxHealth}";
+		
+		// 更新玩家信息
+		_playerNameLabel.Text = Player.Name;
+		_playerHealthBar.Value = Player.GetHealthPercentage() * 100;
+		_playerHealthLabel.Text = $"{Player.CurrentHealth}/{Player.MaxHealth}";
+		
+		// 更新格挡值
+		_playerQiLabel.Text = $"格挡: {Player.Block}";
+		
+		// 更新气力值
+		_energyLabel.Text = $"气力: {_currentEnergy}/{_maxEnergy}";
+		
+		// 更新牌堆信息
+		_drawPileButton.Text = $"抽牌堆: {_drawPile.Count}";
+		_discardPileButton.Text = $"弃牌堆: {_discardPile.Count}";
+	}
+	
+	// 添加战斗日志
+	public void AddBattleLog(string text, bool isImportant = false)
+	{
+		if (isImportant)
+		{
+			_logText.Text += $"\n[color=yellow]{text}[/color]";
+		}
+		else
+		{
+			_logText.Text += $"\n{text}";
+		}
+	}
+	
+	// 结束回合按钮点击
+	private void OnEndTurnPressed()
+	{
+		EndPlayerTurn();
+	}
+	
+	// 结束玩家回合
+	private void EndPlayerTurn()
+	{
+		// 将手牌全部放入弃牌堆
+		foreach (var card in _hand)
+		{
+			_discardPile.Add(card);
+		}
+		_hand.Clear();
+		
+		// 清空手牌UI
+		foreach (var child in _handContainer.GetChildren())
+		{
+			child.QueueFree();
+		}
+		
+		// 玩家回合结束处理
+		Player.OnEndTurn();
+		
+		// 更新UI
+		UpdateUI();
+		
+		// 开始敌人回合
+		StartEnemyTurn();
+	}
+	
+	// 开始敌人回合
+	private void StartEnemyTurn()
+	{
+		_currentState = BattleState.EnemyTurn;
+		
+		AddBattleLog($"{Enemy.Name}的回合！", true);
+		
+		// 延迟一段时间后执行敌人行动
+		_timer.WaitTime = 1.0f;
+		_timer.Timeout += EnemyAction;
+		_timer.Start();
+	}
+	
+	// 敌人行动
+	private void EnemyAction()
+	{
+		// 解除计时器事件绑定，避免多次触发
+		_timer.Timeout -= EnemyAction;
+		
+		// 敌人攻击玩家
+		int damage = Enemy.Attack;
+		AddBattleLog($"{Enemy.Name}使用了「普通攻击」，造成 {damage} 点伤害！");
+		Player.TakeDamage(damage);
+		
+		// 更新UI
+		UpdateUI();
+		
+		// 延迟一段时间后结束敌人回合
+		_timer.WaitTime = 1.0f;
+		_timer.Timeout += EndEnemyTurn;
+		_timer.Start();
+	}
+	
+	// 结束敌人回合
+	private void EndEnemyTurn()
+	{
+		// 解除计时器事件绑定，避免多次触发
+		_timer.Timeout -= EndEnemyTurn;
+		
+		// 检查战斗是否结束
+		if (CheckBattleEnd())
+		{
+			return;
+		}
+		
+		// 回合结束处理
+		Enemy.OnEndTurn();
+		
+		// 开始新的玩家回合
+		StartPlayerTurn();
+	}
+	
+	// 查看抽牌堆
+	private void OnDrawPilePressed()
+	{
+		string cards = "";
+		foreach (var card in _drawPile)
+		{
+			cards += $"{card.Name}({card.Cost})\n";
+		}
+		
+		if (string.IsNullOrEmpty(cards))
+		{
+			AddBattleLog("抽牌堆为空！");
+		}
+		else
+		{
+			AddBattleLog($"抽牌堆：\n{cards}");
+		}
+	}
+	
+	// 查看弃牌堆
+	private void OnDiscardPilePressed()
+	{
+		string cards = "";
+		foreach (var card in _discardPile)
+		{
+			cards += $"{card.Name}({card.Cost})\n";
+		}
+		
+		if (string.IsNullOrEmpty(cards))
+		{
+			AddBattleLog("弃牌堆为空！");
+		}
+		else
+		{
+			AddBattleLog($"弃牌堆：\n{cards}");
+		}
+	}
+	
+	// 检查战斗是否结束
+	private bool CheckBattleEnd()
+	{
+		if (Enemy.IsDead())
+		{
+			// 玩家胜利
+			_currentState = BattleState.Victory;
+			AddBattleLog("你击败了敌人！", true);
+			
+			// 延迟一段时间后返回
+			_timer.WaitTime = 2.0f;
+			_timer.Timeout += OnBattleVictory;
+			_timer.Start();
+			
+			return true;
+		}
+		else if (Player.IsDead())
+		{
+			// 玩家失败
+			_currentState = BattleState.Defeat;
+			AddBattleLog("你被击败了！", true);
+			
+			// 延迟一段时间后返回
+			_timer.WaitTime = 2.0f;
+			_timer.Timeout += OnBattleDefeat;
+			_timer.Start();
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// 战斗胜利处理
+	private void OnBattleVictory()
+	{
+		// 解除计时器事件绑定
+		_timer.Timeout -= OnBattleVictory;
+		
+		// 处理战斗胜利结果
+		_gameManager.HandleBattleResult(true);
+		
+		// 返回到游戏主场景
+		_gameManager.NavigateToScene("Game");
+	}
+	
+	// 战斗失败处理
+	private void OnBattleDefeat()
+	{
+		// 解除计时器事件绑定
+		_timer.Timeout -= OnBattleDefeat;
+		
+		// 处理战斗失败结果
+		_gameManager.HandleBattleResult(false);
+		
+		// 返回到游戏主场景
+		_gameManager.NavigateToScene("Game");
+	}
+
+	// 获取默认卡牌图像路径
+	private string GetDefaultImagePathForCardType(CardType type)
+	{
+		switch (type)
+		{
+			case CardType.Attack:
+				return "res://Resources/Images/Cards/strike.png";
+			case CardType.Defense:
+				return "res://Resources/Images/Cards/defend.png";
+			case CardType.Skill:
+				return "res://Resources/Images/Cards/qiflow.png";
+			case CardType.Power:
+				return "res://Resources/Images/Cards/concentrate.png";
+			default:
+				return "res://Resources/Images/Cards/burst.png";
+		}
+	}
 } 

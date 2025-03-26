@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class PlayerData : Resource
 {
@@ -52,6 +53,12 @@ public partial class PlayerData : Resource
     
     // 临时加成数据结构
     private Dictionary<string, (float value, float duration, float elapsed)> _temporaryBonuses = new Dictionary<string, (float, float, float)>();
+    
+    // 玩家卡牌收集
+    public List<Card> CardCollection { get; private set; } = new List<Card>();
+    
+    // 玩家当前牌组
+    public List<Card> Deck { get; private set; } = new List<Card>();
     
     // 构造函数
     public PlayerData(string playerName = "修仙者")
@@ -389,6 +396,96 @@ public partial class PlayerData : Resource
     }
     
     // 突破境界相关方法可以在这里添加
+    
+    // 初始化牌组
+    public void InitializeStarterDeck()
+    {
+        // 清空当前牌组
+        Deck.Clear();
+        
+        // 添加基础攻击牌
+        for (int i = 0; i < 5; i++)
+        {
+            var strikeCard = new Card
+            {
+                Name = "打击",
+                Description = "造成6点伤害",
+                Cost = 1,
+                Type = CardType.Attack,
+                ImagePath = "res://Resources/Images/Cards/strike.png",
+                Effects = new List<CardEffect> { new DamageEffect { DamageAmount = 6 } }
+            };
+            Deck.Add(strikeCard);
+        }
+        
+        // 添加基础防御牌
+        for (int i = 0; i < 5; i++)
+        {
+            var defendCard = new Card
+            {
+                Name = "防御",
+                Description = "获得5点格挡",
+                Cost = 1,
+                Type = CardType.Defense,
+                ImagePath = "res://Resources/Images/Cards/defend.png",
+                Effects = new List<CardEffect> { new BlockEffect { BlockAmount = 5 } }
+            };
+            Deck.Add(defendCard);
+        }
+        
+        // 添加初始特殊牌
+        var qiFlowCard = new Card
+        {
+            Name = "气流",
+            Description = "抽2张牌",
+            Cost = 1,
+            Type = CardType.Skill,
+            ImagePath = "res://Resources/Images/Cards/qiflow.png",
+            Effects = new List<CardEffect> { new DrawCardEffect { CardCount = 2 } }
+        };
+        Deck.Add(qiFlowCard);
+        
+        // 同时添加到收集中
+        foreach (var card in Deck)
+        {
+            if (!CardCollection.Any(c => c.Name == card.Name))
+            {
+                CardCollection.Add(card.Clone());
+            }
+        }
+    }
+    
+    // 添加卡牌到收集
+    public void AddCardToCollection(Card card)
+    {
+        // 检查是否已经收集
+        if (!CardCollection.Any(c => c.Name == card.Name))
+        {
+            CardCollection.Add(card.Clone());
+        }
+    }
+    
+    // 添加卡牌到牌组
+    public void AddCardToDeck(Card card)
+    {
+        Deck.Add(card.Clone());
+    }
+    
+    // 从牌组中移除卡牌
+    public void RemoveCardFromDeck(string cardName)
+    {
+        var card = Deck.FirstOrDefault(c => c.Name == cardName);
+        if (card != null)
+        {
+            Deck.Remove(card);
+        }
+    }
+    
+    // 获取玩家牌组中某种类型的卡牌
+    public List<Card> GetCardsByType(CardType type)
+    {
+        return Deck.Where(c => c.Type == type).ToList();
+    }
 }
 
 // 修仙境界枚举
