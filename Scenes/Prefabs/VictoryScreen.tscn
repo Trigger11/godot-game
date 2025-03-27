@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cxbr7h1uy2j5b"]
 
 [ext_resource type="FontFile" uid="uid://dgi0p5377ui0v" path="res://Resources/Fonts/XiaoKeFont.ttf" id="1_3cshk"]
-[ext_resource type="Script" path="res://Scripts/VictoryScreen.cs" id="1_y34gs"]
+[ext_resource type="Script" uid="uid://maoov30prfnt" path="res://Scripts/VictoryScreen.cs" id="1_y34gs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndpd7"]
 bg_color = Color(0.0627451, 0.0627451, 0.0941176, 0.941176)
@@ -177,4 +177,4 @@ size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.815686, 0.65098, 0.407843, 1)
 theme_override_fonts/font = ExtResource("1_3cshk")
 theme_override_font_sizes/font_size = 20
-text = "继续修行" 
+text = "继续修行"

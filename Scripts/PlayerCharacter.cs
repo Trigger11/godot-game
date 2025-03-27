@@ -29,7 +29,7 @@ public partial class PlayerCharacter : Character
     }
     
     // 从玩家数据创建角色
-    public static PlayerCharacter FromPlayerData(PlayerData playerData)
+    public static new PlayerCharacter FromPlayerData(PlayerData playerData)
     {
         PlayerCharacter character = new PlayerCharacter();
         character.Name = playerData.PlayerName;

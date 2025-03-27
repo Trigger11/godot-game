@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 // 卡牌基础类
-public partial class Card : Resource
+public partial class CardInfo : Resource
 {
     public string Name { get; set; } = "未命名卡牌";
     public string Description { get; set; } = "这是一张卡牌。";
@@ -29,9 +29,9 @@ public partial class Card : Resource
     }
     
     // 克隆卡牌
-    public Card Clone()
+    public CardInfo Clone()
     {
-        return new Card
+        return new CardInfo
         {
             Name = this.Name,
             Description = this.Description,
@@ -46,12 +46,12 @@ public partial class Card : Resource
     }
     
     // 升级卡牌 (新增)
-    public virtual Card Upgrade()
+    public virtual CardInfo Upgrade()
     {
         if (!Upgradable || IsUpgraded)
             return this;
             
-        Card upgradedCard = Clone();
+        CardInfo upgradedCard = Clone();
         upgradedCard.IsUpgraded = true;
         upgradedCard.Name = $"{Name}+";
         

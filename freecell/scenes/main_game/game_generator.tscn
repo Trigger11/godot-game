@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxmui4fuxab8t"]
+
+[ext_resource type="Script" uid="uid://bdi0mngo8w6tw" path="res://freecell/scenes/main_game/GameGenerator.cs" id="1_uyfpn"]
+
+[node name="GameGenerator" type="Node"]
+script = ExtResource("1_uyfpn")

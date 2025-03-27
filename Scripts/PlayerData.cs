@@ -55,10 +55,10 @@ public partial class PlayerData : Resource
     private Dictionary<string, (float value, float duration, float elapsed)> _temporaryBonuses = new Dictionary<string, (float, float, float)>();
     
     // 玩家卡牌收集
-    public List<Card> CardCollection { get; private set; } = new List<Card>();
+    public List<CardInfo> CardCollection { get; private set; } = new List<CardInfo>();
     
     // 玩家当前牌组
-    public List<Card> Deck { get; private set; } = new List<Card>();
+    public List<CardInfo> Deck { get; private set; } = new List<CardInfo>();
     
     // 构造函数
     public PlayerData(string playerName = "修仙者")
@@ -406,7 +406,7 @@ public partial class PlayerData : Resource
         // 添加基础攻击牌
         for (int i = 0; i < 5; i++)
         {
-            var strikeCard = new Card
+            var strikeCard = new CardInfo
             {
                 Name = "打击",
                 Description = "造成6点伤害",
@@ -421,7 +421,7 @@ public partial class PlayerData : Resource
         // 添加基础防御牌
         for (int i = 0; i < 5; i++)
         {
-            var defendCard = new Card
+            var defendCard = new CardInfo
             {
                 Name = "防御",
                 Description = "获得5点格挡",
@@ -434,7 +434,7 @@ public partial class PlayerData : Resource
         }
         
         // 添加初始特殊牌
-        var qiFlowCard = new Card
+        var qiFlowCard = new CardInfo
         {
             Name = "气流",
             Description = "抽2张牌",
@@ -456,7 +456,7 @@ public partial class PlayerData : Resource
     }
     
     // 添加卡牌到收集
-    public void AddCardToCollection(Card card)
+    public void AddCardToCollection(CardInfo card)
     {
         // 检查是否已经收集
         if (!CardCollection.Any(c => c.Name == card.Name))
@@ -466,7 +466,7 @@ public partial class PlayerData : Resource
     }
     
     // 添加卡牌到牌组
-    public void AddCardToDeck(Card card)
+    public void AddCardToDeck(CardInfo card)
     {
         Deck.Add(card.Clone());
     }
@@ -482,7 +482,7 @@ public partial class PlayerData : Resource
     }
     
     // 获取玩家牌组中某种类型的卡牌
-    public List<Card> GetCardsByType(CardType type)
+    public List<CardInfo> GetCardsByType(CardType type)
     {
         return Deck.Where(c => c.Type == type).ToList();
     }

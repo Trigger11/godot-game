@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c76klys5u4jkb"]
+
+[ext_resource type="Script" uid="uid://bhk7gf3uc6std" path="res://freecell/scenes/local_db/RecordManager.cs" id="1_b0qtx"]
+
+[node name="RecordManager" type="Node"]
+script = ExtResource("1_b0qtx")

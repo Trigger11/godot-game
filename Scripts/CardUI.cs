@@ -4,7 +4,7 @@ using System;
 public partial class CardUI : Control
 {
 	// 卡牌数据
-	private Card _cardData;
+	private CardInfo _cardData;
 	
 	// 拖拽相关变量
 	private bool _isDragging = false;
@@ -48,7 +48,7 @@ public partial class CardUI : Control
 	}
 	
 	// 设置卡牌数据
-	public void SetCardData(Card cardData)
+	public void SetCardData(CardInfo cardData)
 	{
 		_cardData = cardData;
 		
@@ -60,7 +60,7 @@ public partial class CardUI : Control
 	}
 	
 	// 获取卡牌数据
-	public Card GetCardData()
+	public CardInfo GetCardData()
 	{
 		return _cardData;
 	}

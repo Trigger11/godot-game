@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c644xfredmjoj"]
+
+[ext_resource type="Script" uid="uid://dusk6m28ajxxq" path="res://freecell/scenes/card_factory/FreecellCardFactory.cs" id="1_dx6uu"]
+
+[node name="FreecellCardFactory" type="Node"]
+script = ExtResource("1_dx6uu")

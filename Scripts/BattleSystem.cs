@@ -25,10 +25,10 @@ public partial class BattleSystem : Control
 	public Character Enemy { get; private set; }
 	
 	// 卡牌相关
-	private List<Card> _drawPile = new List<Card>();    // 抽牌堆
-	private List<Card> _hand = new List<Card>();        // 手牌
-	private List<Card> _discardPile = new List<Card>(); // 弃牌堆
-	private List<Card> _exhaustPile = new List<Card>(); // 消耗堆
+	private List<CardInfo> _drawPile = new List<CardInfo>();    // 抽牌堆
+	private List<CardInfo> _hand = new List<CardInfo>();        // 手牌
+	private List<CardInfo> _discardPile = new List<CardInfo>(); // 弃牌堆
+	private List<CardInfo> _exhaustPile = new List<CardInfo>(); // 消耗堆
 	
 	// 当前回合气力值
 	private int _currentEnergy = 0;
@@ -339,7 +339,7 @@ public partial class BattleSystem : Control
 		// 添加基础攻击牌
 		for (int i = 0; i < 10; i++)
 		{
-			var strikeCard = new Card
+			var strikeCard = new CardInfo
 			{
 				Name = "打击",
 				Description = "造成6点伤害",
@@ -354,7 +354,7 @@ public partial class BattleSystem : Control
 		// 添加基础防御牌
 		for (int i = 0; i < 5; i++)
 		{
-			var defendCard = new Card
+			var defendCard = new CardInfo
 			{
 				Name = "防御",
 				Description = "获得5点格挡",
@@ -367,7 +367,7 @@ public partial class BattleSystem : Control
 		}
 		
 		// 添加特殊技能牌
-		var burstCard = new Card
+		var burstCard = new CardInfo
 		{
 			Name = "气爆术",
 			Description = "造成10点伤害",
@@ -378,7 +378,7 @@ public partial class BattleSystem : Control
 		};
 		_drawPile.Add(burstCard);
 		
-		var qiFlowCard = new Card
+		var qiFlowCard = new CardInfo
 		{
 			Name = "五雷天心诀",
 			Description = "抽2张牌",
@@ -389,7 +389,7 @@ public partial class BattleSystem : Control
 		};
 		_drawPile.Add(qiFlowCard);
 		
-		var concentrateCard = new Card
+		var concentrateCard = new CardInfo
 		{
 			Name = "凝神",
 			Description = "获得2点气力",
@@ -440,7 +440,7 @@ public partial class BattleSystem : Control
 		{
 			n--;
 			int k = random.Next(n + 1);
-			Card temp = _drawPile[k];
+			CardInfo temp = _drawPile[k];
 			_drawPile[k] = _drawPile[n];
 			_drawPile[n] = temp;
 		}
@@ -461,7 +461,7 @@ public partial class BattleSystem : Control
 		// 如果抽牌堆还有牌，抽一张到手上
 		if (_drawPile.Count > 0)
 		{
-			Card card = _drawPile[0];
+			CardInfo card = _drawPile[0];
 			_drawPile.RemoveAt(0);
 			_hand.Add(card);
 			
@@ -473,7 +473,7 @@ public partial class BattleSystem : Control
 	}
 	
 	// 使用预制体创建卡牌UI
-	private void CreateCardUI(Card card)
+	private void CreateCardUI(CardInfo card)
 	{
 		// 如果手牌已满，不再创建新卡牌
 		if (_handContainer.GetChildCount() >= 8)
@@ -515,7 +515,7 @@ public partial class BattleSystem : Control
 	private void OnCardPlayed(CardUI cardUI)
 	{
 		// 获取卡牌数据
-		Card card = cardUI.GetCardData();
+		CardInfo card = cardUI.GetCardData();
 		if (card == null) return;
 		
 		// 检查气力是否足够
@@ -553,7 +553,7 @@ public partial class BattleSystem : Control
 	// 使用卡牌
 	private void UseCard(CardUI cardUI)
 	{
-		Card card = cardUI.GetCardData();
+		CardInfo card = cardUI.GetCardData();
 		
 		if (card == null || _currentEnergy < card.Cost)
 		{
